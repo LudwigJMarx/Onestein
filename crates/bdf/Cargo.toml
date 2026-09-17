@@ -1,0 +1,13 @@
+[package]
+name = "onestein-bdf"
+version = "0.0.0"
+description = "Binary Data Format (BDF) version 1, the encoding under the Bramble protocols"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+
+[lints]
+workspace = true
