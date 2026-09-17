@@ -17,12 +17,18 @@ Early. One crate, no release.
 
 | Crate | Layer | State |
 |---|---|---|
-| `onestein-bdf` | Binary Data Format, version 1 | reader, writer, canonical form. 28 spec-derived tests. No vectors from the Java implementation yet |
+| `onestein-bdf` | Binary Data Format, version 1 | reader, writer, canonical form. 28 tests |
+| `onestein-crypto` | the multi-argument hash over BLAKE2b | 5 tests, checked against CPython's `hashlib` |
+| `onestein-sync` | BSP group and message identifiers | 8 tests |
 
-Planned, bottom up: the hash constructions (group and message identifiers,
-BLAKE2b), then BTP (key rotation, frames without a plaintext header), then BSP
-(records and sync sessions). The measure of each layer is not that its tests
-pass but that it agrees with Briar on the wire.
+All 41 tests are derived from the specification, and none of them involves the
+Java implementation. They show that our reading of the specification is
+consistent, not that Briar computes the same bytes.
+
+Planned, bottom up: BTP (key rotation, frames without a plaintext header),
+then BSP (records and sync sessions), then contact establishment (BQP, BHP),
+which BTP does not do on its own. The measure of each layer is not that its
+tests pass but that it agrees with Briar on the wire.
 
 ## How this is written
 
