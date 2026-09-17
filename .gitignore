@@ -9,3 +9,4 @@ _local/
 .env
 .env.*
 !.env.example
+target/
