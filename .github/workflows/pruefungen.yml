@@ -1,0 +1,53 @@
+# Die Pruefungen bei jedem Anstoss.
+#
+# ── WARUM ES DAS BRAUCHT ───────────────────────────────────────────────────
+#
+# Ein Pruefer, den niemand laufen laesst, ist eine Datei. Diese Datei ist der
+# Ort, an dem aus Dateien Pruefer werden - und `pruefer-verdrahtet` ist der
+# Pruefer, der genau das nachhaelt.
+#
+# ── WAS HIER HINEIN GEHOERT ────────────────────────────────────────────────
+#
+# Jeder Schritt nennt seinen Pruefer beim Dateinamen, damit
+# `pruefer-verdrahtet` ihn findet. Ein Umweg ueber ein Paketskript geht auch,
+# aber dann muss dieses Paketskript hier namentlich aufgerufen werden.
+#
+# Was hier NICHT hineingehoert: eine Aufzaehlung der Gates in Prosa. Die
+# verbindliche Liste ist diese Datei selbst, plus das Ruleset des Repos
+# (`gh api repos/:owner/:repo/rulesets`). Eine Liste in einer README veraltet
+# beim naechsten Merge.
+
+name: Pruefungen
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pruefen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Zuerst der Pruefer ueber die Pruefer. Scheitert er, sagen alle
+      # folgenden Schritte weniger aus, als sie zu sagen scheinen.
+      - name: Jeder Pruefer wird auch aufgerufen
+        run: python3 scripts/pruefer-verdrahtet.py
+
+      - name: Test des Pruefers selbst
+        run: python3 scripts/pruefer-verdrahtet.test.py
+
+      # ── AB HIER DAS PROJEKT ─────────────────────────────────────────────
+      # Die eigentlichen Pruefungen. Jede einzeln benannt, nicht in einem
+      # Sammelschritt versteckt: ein rotes Feld soll sagen, WAS rot ist.
+      #
+      # - name: Typen
+      #   run: <...>
+      #
+      # - name: Tests
+      #   run: <...>
