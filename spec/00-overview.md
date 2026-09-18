@@ -71,6 +71,7 @@ bound into the keys derived below it. Nothing negotiates in the clear.
 
 | Layer | Document | What it does | Origin |
 |---|---|---|---|
+| Primitives | `05-primitives.md` | Notation, the hash and key derivation construction, the algorithm list | HASH and KDF follow Bramble's framing, credited there. The algorithm list is ours |
 | Encoding | `10-encoding.md` | Canonical, length-framed binary encoding | **BDF version 1**, unchanged, as published in briar-spec. It is compact, unambiguous and already implemented here. Inventing a fourth binary encoding would be novelty for its own sake |
 | Transport | `20-transport.md` | Tag, stream header, frames; keys rotated per time period; reordering windows | Follows **BTP version 4**'s construction, with this project's labels and an added version binding. Credited, not copied: the design is published and it is the part a green-field attempt is most likely to get wrong |
 | Handshake | `30-handshake.md` | Hybrid X25519 and ML-KEM key agreement between two identities | Our draft in `hybrid-handshake.md`, to be rewritten as the native handshake rather than an extension |
