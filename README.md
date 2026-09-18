@@ -27,8 +27,9 @@ rule that stops an old certificate resurrecting them. Two identities can exchang
 bundle in person or by link and derive rendezvous addresses from it. Messages are signed and
 framed, and the horizon rule decides what may be delivered. The per-peer state carries the
 retransmission backoff. Queues at a relay have names, keys and proofs, and
-an identity comes back from its seed. Retention, the delivery loop over a
-real transport, and the relay daemon itself are not built.
+an identity comes back from its seed. Retention policies decide what a device may
+drop. The delivery loop over a real transport and the relay daemon itself are
+not built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -47,14 +48,14 @@ real transport, and the relay daemon itself are not built.
 | `onestein-bdf` | encoding | reader, writer, strict mode for anything that gets hashed. 35 tests |
 | `onestein-crypto` | hash, PRF and key derivation over BLAKE2b | 9 tests, checked against CPython's `hashlib` |
 | `onestein-identity` | identifiers, certificates and revocations signed twice, recovery from a seed | 26 tests |
-| `onestein-sync` | identifiers, signed messages, the five records, the horizon rule, per-peer state | 34 tests |
+| `onestein-sync` | identifiers, signed messages, records, horizon, per-peer state, retention | 42 tests |
 | `onestein-transport` | the whole transport layer: periods, rotation, tags, headers, frames, reordering windows | 39 tests |
 | `onestein-contact` | bundles, commitments, links, rendezvous, fingerprints | 16 tests |
 | `onestein-record` | the record framing both layers share | 9 tests |
 | `onestein-relay` | queue names, the two key pairs per queue, proofs | 8 tests |
 | `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations, records | 16 tests |
 
-192 tests, all derived from a written specification, none of them involving a
+200 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 

@@ -13,8 +13,11 @@
 mod message;
 mod peer;
 mod records;
+mod retention;
 
 pub use peer::{MAX_BACKOFF_DOUBLINGS, PeerMessageState};
+
+pub use retention::Retention;
 
 pub use records::{
     Deliverability, SyncRecord, TYPE_ACK, TYPE_MESSAGE, TYPE_OFFER, TYPE_REQUEST, TYPE_UNAVAILABLE,
