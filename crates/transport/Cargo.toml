@@ -1,6 +1,6 @@
 [package]
 name = "onestein-transport"
-version = "0.0.0"
+version.workspace = true
 description = "Time-based key management for the transport layer"
 edition.workspace = true
 license.workspace = true
@@ -9,7 +9,7 @@ rust-version.workspace = true
 
 [dependencies]
 crypto_secretbox = "0.1.1"
-onestein-crypto = { path = "../crypto", version = "0.0.0" }
+onestein-crypto = { path = "../crypto", version = "0.1.0" }
 
 [lints]
 workspace = true

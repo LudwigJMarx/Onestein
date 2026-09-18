@@ -1,6 +1,6 @@
 [package]
 name = "onestein-sync"
-version = "0.0.0"
+version.workspace = true
 description = "Bramble Synchronisation Protocol: identifiers and data formats"
 edition.workspace = true
 license.workspace = true
@@ -8,16 +8,16 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-onestein-bdf = { path = "../bdf", version = "0.0.0" }
-onestein-crypto = { path = "../crypto", version = "0.0.0" }
-onestein-identity = { path = "../identity", version = "0.0.0" }
-onestein-record = { path = "../record", version = "0.0.0" }
+onestein-bdf = { path = "../bdf", version = "0.1.0" }
+onestein-crypto = { path = "../crypto", version = "0.1.0" }
+onestein-identity = { path = "../identity", version = "0.1.0" }
+onestein-record = { path = "../record", version = "0.1.0" }
 ed25519-dalek = "3.0.0"
 
 [dev-dependencies]
 ed25519-dalek = "3.0.0"
-onestein-bdf = { path = "../bdf", version = "0.0.0" }
-onestein-record = { path = "../record", version = "0.0.0" }
+onestein-bdf = { path = "../bdf", version = "0.1.0" }
+onestein-record = { path = "../record", version = "0.1.0" }
 
 [lints]
 workspace = true

@@ -30,7 +30,7 @@ numbers and comes back.
 
 ```toml
 [dependencies]
-onestein = { git = "https://github.com/LudwigJMarx/Onestein" }
+onestein = { git = "https://github.com/LudwigJMarx/Onestein", tag = "v0.1.0" }
 ```
 
 Every layer is also its own crate, and can be taken alone.
@@ -115,7 +115,10 @@ Not affiliated with the Briar Project.
 
 ## State
 
-Draft 0. Every layer has a document and an implementation.
+Draft 0, released as v0.1.0. Every layer has a document and an
+implementation. The version is the crates', not the protocol's: every layer
+in the specification is still at version 1 and every document is still a
+draft.
 
 ```
 229 tests, clippy clean, 64 third-party packages named

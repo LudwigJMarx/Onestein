@@ -50,7 +50,11 @@ def tabelle() -> str:
         cwd=WURZEL,
     ).stdout
     meta = json.loads(roh)
-    eigene = {p["name"] for p in meta["packages"] if p["name"].startswith("onestein-")}
+    # Nach Mitgliedschaft im Workspace, nicht nach Namenspraefix: das
+    # Fassaden-Crate heisst genau "onestein" und stand deshalb als fremdes
+    # Paket in der Datei.
+    mitglieder = set(meta.get("workspace_members", []))
+    eigene = {p["name"] for p in meta["packages"] if p["id"] in mitglieder}
     fremd = sorted(
         (
             (p["name"], p["version"], p.get("license") or "see repository")

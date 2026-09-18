@@ -354,7 +354,7 @@ dependencies = [
 
 [[package]]
 name = "onestein"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "onestein-bdf",
  "onestein-contact",
@@ -369,11 +369,11 @@ dependencies = [
 
 [[package]]
 name = "onestein-bdf"
-version = "0.0.0"
+version = "0.1.0"
 
 [[package]]
 name = "onestein-contact"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "onestein-bdf",
  "onestein-crypto",
@@ -382,14 +382,14 @@ dependencies = [
 
 [[package]]
 name = "onestein-crypto"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "blake2",
 ]
 
 [[package]]
 name = "onestein-handshake"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "ml-kem",
  "onestein-crypto",
@@ -399,7 +399,7 @@ dependencies = [
 
 [[package]]
 name = "onestein-identity"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "ed25519-dalek",
  "ml-dsa",
@@ -410,11 +410,11 @@ dependencies = [
 
 [[package]]
 name = "onestein-record"
-version = "0.0.0"
+version = "0.1.0"
 
 [[package]]
 name = "onestein-relay"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "ed25519-dalek",
  "onestein-crypto",
@@ -423,7 +423,7 @@ dependencies = [
 
 [[package]]
 name = "onestein-relayd"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "getrandom 0.3.4",
  "onestein-relay",
@@ -431,7 +431,7 @@ dependencies = [
 
 [[package]]
 name = "onestein-sync"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "ed25519-dalek",
  "onestein-bdf",
@@ -442,7 +442,7 @@ dependencies = [
 
 [[package]]
 name = "onestein-transport"
-version = "0.0.0"
+version = "0.1.0"
 dependencies = [
  "crypto_secretbox",
  "onestein-crypto",

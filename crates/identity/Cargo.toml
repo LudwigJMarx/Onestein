@@ -1,6 +1,6 @@
 [package]
 name = "onestein-identity"
-version = "0.0.0"
+version.workspace = true
 description = "Identities, devices and their identifiers"
 edition.workspace = true
 license.workspace = true
@@ -11,11 +11,11 @@ rust-version.workspace = true
 ed25519-dalek = "3.0.0"
 x25519-dalek = { version = "3.0.0", features = ["static_secrets"] }
 ml-dsa = "0.1.1"
-onestein-bdf = { path = "../bdf", version = "0.0.0" }
-onestein-crypto = { path = "../crypto", version = "0.0.0" }
+onestein-bdf = { path = "../bdf", version = "0.1.0" }
+onestein-crypto = { path = "../crypto", version = "0.1.0" }
 
 [dev-dependencies]
-onestein-bdf = { path = "../bdf", version = "0.0.0" }
+onestein-bdf = { path = "../bdf", version = "0.1.0" }
 x25519-dalek = { version = "3.0.0", features = ["static_secrets"] }
 
 [lints]

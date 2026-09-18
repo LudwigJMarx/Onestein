@@ -1,6 +1,6 @@
 [package]
 name = "onestein-crypto"
-version = "0.0.0"
+version.workspace = true
 description = "The hash construction the Bramble protocols are built on"
 edition.workspace = true
 license.workspace = true
