@@ -1,56 +1,69 @@
 # Onestein
 
-A second implementation of the Bramble protocol stack, in Rust, written from
-the specification.
+A messaging protocol stack for networks that are slow, intermittent, censored
+or absent, and a Rust implementation of it.
 
-Bramble is the protocol family under [Briar](https://briarproject.org): a
-messaging stack that carries the same messages over Tor, Bluetooth, local
-Wi-Fi or a memory card, with no server anywhere. One implementation of it
-exists, in Java, on Android. A specification with one implementation is a
-description of that implementation; the second one is what turns it into a
-specification, and it is also what makes the stack reachable from platforms
-the first one cannot run on.
+It carries the same messages over Tor, Bluetooth, a local network or a memory
+card. It needs no server to exist. It assigns no identifier that anyone hands
+out. An identity can live on more than one device and can survive the loss of
+one.
+
+Briar's Bramble stack answered the transport question well, and this stack
+keeps that answer and credits it. It does not keep the limits that sit in
+Bramble's design rather than in its code: no post-quantum key agreement, one
+device per identity, no delivery while a peer is offline, and groups that
+require every member to store everything. Those four are the reason this is
+its own protocol and not another implementation of Bramble.
+
+It does not interoperate with Briar.
 
 ## State
 
-Early. One crate, no release.
+Draft 0. Nothing here has been reviewed by anyone, and no part of the stack
+is finished.
+
+| Document | Layer | State |
+|---|---|---|
+| [spec/00-overview.md](spec/00-overview.md) | requirements, threat model, layering, decisions | written |
+| `spec/10-encoding.md` | canonical binary encoding | pending. The encoding itself is decided: BDF version 1, unchanged |
+| `spec/20-transport.md` | tags, stream headers, frames, key rotation | pending |
+| [spec/hybrid-handshake.md](spec/hybrid-handshake.md) | hybrid X25519 and ML-KEM key agreement | written as an extension of Briar's handshake, to be rewritten as the native one |
+| `spec/40-identity.md` | identity, devices, recovery | pending |
+| `spec/50-sync.md` | message graph, offers, requests, retention | pending |
+| `spec/60-relay.md` | optional store-and-forward | pending |
 
 | Crate | Layer | State |
 |---|---|---|
-| `onestein-bdf` | Binary Data Format, version 1 | reader, writer, canonical form. 28 tests |
+| `onestein-bdf` | encoding | reader, writer, canonical form. 28 tests |
 | `onestein-crypto` | the multi-argument hash over BLAKE2b | 5 tests, checked against CPython's `hashlib` |
-| `onestein-sync` | BSP group and message identifiers | 8 tests |
+| `onestein-sync` | identifiers | 8 tests. **Still carries Bramble's labels**, which is wrong for this stack and changes when `50-sync.md` is written |
 
-All 41 tests are derived from the specification, and none of them involves the
-Java implementation. They show that our reading of the specification is
-consistent, not that Briar computes the same bytes.
-
-Planned, bottom up: BTP (key rotation, frames without a plaintext header),
-then BSP (records and sync sessions), then contact establishment (BQP, BHP),
-which BTP does not do on its own. The measure of each layer is not that its
-tests pass but that it agrees with Briar on the wire.
+41 tests, all derived from a written specification, none of them involving a
+second implementation. They show that the code does what the documents say,
+which is not the same as the documents being right.
 
 ## How this is written
 
-**The specification is the source, not the other implementation.** Briar's
-Java code is GPL-3.0; this crate is Apache-2.0 OR MIT, so the source is not
-read. Where the specification is silent, the gap is marked as an open question
-in the code rather than filled in by guessing. Test vectors produced by
-running the Java implementation are a different matter and are welcome.
+**The document comes before the code.** Where an implementation question has
+no answer in the specification, the specification gets the answer first. A
+constant that only exists in a source file is a decision nobody made.
 
-Specification: <https://code.briarproject.org/briar/briar-spec>, CC BY-SA 4.0.
+**Briar's Java source is not read.** It is GPL-3.0 and this project is
+Apache-2.0 OR MIT. The Bramble *specifications* are CC BY-SA 4.0, public, and
+cited wherever this stack follows them.
 
 ## Build
 
 ```bash
-cargo test --workspace
-cargo clippy --all-targets -- -D warnings
+cargo test --workspace --locked
+cargo clippy --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
 python3 scripts/pruefer-verdrahtet.py
 ```
 
 ## Licence
 
-Apache-2.0 OR MIT, at your option. See `LICENSE-APACHE` and `LICENSE-MIT`.
+Apache-2.0 OR MIT, at your option, for the code. The documents under `spec/`
+are CC BY-SA 4.0, to match the specifications they cite.
 
 Not affiliated with the Briar Project.
