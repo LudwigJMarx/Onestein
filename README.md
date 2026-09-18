@@ -38,9 +38,10 @@ is finished.
 |---|---|---|
 | `onestein-bdf` | encoding | reader, writer, strict mode for anything that gets hashed. 35 tests |
 | `onestein-crypto` | the multi-argument hash over BLAKE2b | 5 tests, checked against CPython's `hashlib` |
-| `onestein-sync` | identifiers | 8 tests. **Still carries Bramble's labels**, which is wrong for this stack and changes when `50-sync.md` is written |
+| `onestein-identity` | identity identifiers | 3 tests |
+| `onestein-sync` | group and message identifiers | 10 tests |
 
-48 tests, all derived from a written specification, none of them involving a
+53 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 

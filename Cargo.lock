@@ -76,10 +76,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "onestein-identity"
+version = "0.0.0"
+dependencies = [
+ "onestein-crypto",
+]
+
+[[package]]
 name = "onestein-sync"
 version = "0.0.0"
 dependencies = [
  "onestein-crypto",
+ "onestein-identity",
 ]
 
 [[package]]

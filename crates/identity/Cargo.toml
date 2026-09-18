@@ -1,7 +1,7 @@
 [package]
-name = "onestein-sync"
+name = "onestein-identity"
 version = "0.0.0"
-description = "Bramble Synchronisation Protocol: identifiers and data formats"
+description = "Identities, devices and their identifiers"
 edition.workspace = true
 license.workspace = true
 repository.workspace = true
@@ -9,7 +9,6 @@ rust-version.workspace = true
 
 [dependencies]
 onestein-crypto = { path = "../crypto", version = "0.0.0" }
-onestein-identity = { path = "../identity", version = "0.0.0" }
 
 [lints]
 workspace = true
