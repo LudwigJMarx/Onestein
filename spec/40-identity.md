@@ -80,6 +80,24 @@ A device certificate is a BDF dictionary in canonical form (`10-encoding.md`
 - to_sign = HASH("org.onestein.identity/DEVICE_CERTIFICATE", canonical_bdf)
 - signatures are over `to_sign`, one per root key
 
+A certificate travels with its signatures in a canonical BDF dictionary:
+
+| Key | Type | Meaning |
+|---|---|---|
+| `c` | raw | the certificate encoding, exactly as it was signed |
+| `e` | raw | the Ed25519 signature, 64 bytes |
+| `p` | raw | the ML-DSA-65 signature, 3309 bytes |
+
+The certificate is carried as bytes rather than as a nested dictionary
+because what was signed must be what is verified: a verifier that re-encoded
+a parsed structure would be checking a signature over its own encoder.
+
+A verifier MUST check that the `id` field equals the identifier derived from
+the root keys it is verifying against (§3). Without that check, a certificate
+signed by a trusted identity could name a different one, and every contact
+would then hold two identities that disagree about which devices belong to
+whom.
+
 No name, no label, no device type. A field that describes the device to its
 owner also describes it to whoever holds the device, and this certificate
 travels to every contact.
@@ -99,8 +117,17 @@ key exists separately from the device keys.
 The identity keeps a **device set epoch**, an integer that only increases. A
 certificate or revocation names the epoch it belongs to.
 
-- revocation = canonical BDF over `{v, id, dev, epoch, reason?}`, signed by
-  both root keys the same way
+- revocation = canonical BDF over `{v, id, dev, epoch}`, carried and signed
+  the same way, with its own label:
+- to_sign = HASH("org.onestein.identity/DEVICE_REVOCATION", canonical_bdf)
+
+The label differs from the certificate's on purpose. One label for both would
+mean a signature keeps its meaning when the fields around it are reinterpreted,
+and the two structures share four of their field names.
+
+No reason field. A reason is written for a person, travels to every contact,
+and says something about why a device was lost that the owner may not want to
+have said.
 
 Rules for a contact:
 
