@@ -10,7 +10,10 @@
 #![forbid(unsafe_code)]
 
 mod certificate;
+mod recovery;
 mod revocation;
+
+pub use recovery::{RECOVERY_SEED_LEN, RecoverySeed};
 
 pub use revocation::{Revocation, accept_epoch, verify_revocation};
 

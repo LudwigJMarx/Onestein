@@ -378,6 +378,7 @@ dependencies = [
  "ml-dsa",
  "onestein-bdf",
  "onestein-crypto",
+ "x25519-dalek",
 ]
 
 [[package]]

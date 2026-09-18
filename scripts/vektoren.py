@@ -215,3 +215,13 @@ root_key = bsp_hash(
 print(rust("ROOT_KEY", root_key))
 print(rust("CONFIRMATION_A", kdf(root_key, b"org.onestein.handshake/CONFIRMATION_A")))
 print(rust("CONFIRMATION_B", kdf(root_key, b"org.onestein.handshake/CONFIRMATION_B")))
+
+
+# --- Wiederherstellung, spec/40-identity.md §6 ---------------------------
+
+RECOVERY_SEED = fuell(0x5A, 32)
+
+print(rust("RECOVERY_SEED", RECOVERY_SEED))
+print(rust("ROOT_ED25519_SEED", kdf(RECOVERY_SEED, b"org.onestein.identity/ROOT_ED25519")))
+print(rust("ROOT_MLDSA_SEED", kdf(RECOVERY_SEED, b"org.onestein.identity/ROOT_MLDSA")))
+print(rust("CONTACT_SEED", kdf(RECOVERY_SEED, b"org.onestein.identity/CONTACT_KEY")))
