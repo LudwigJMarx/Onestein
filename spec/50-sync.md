@@ -214,6 +214,30 @@ Each time a device can send, it chooses per peer:
 
 Peers need not agree, and need not use the same method to choose.
 
+What each mode sends in one opportunity, given what the device holds and the
+state of §8:
+
+| | Interactive | Batch | Eager |
+|---|---|---|---|
+| ACK everything with `ack_pending` | yes | yes | yes |
+| UNAVAILABLE for a requested message it cannot supply | yes | yes | yes |
+| REQUEST identifiers the peer offered that it does not hold | yes | yes | yes |
+| MESSAGE what the peer requested | yes | — | — |
+| OFFER what it shares and does not know the peer has seen | yes | — | — |
+| MESSAGE what it shares and does not know the peer has seen | — | yes | yes |
+| Respects `next_send_time` | yes | yes | **no** |
+
+The last row is the whole of eager mode: it resends without waiting, which
+costs bandwidth and is the right trade where a round trip takes hours and
+loss is likely.
+
+A device never sends an empty record. Every identifier record says "one or
+more" (§7), and a record with nothing in it costs a round trip to say
+nothing.
+
+A message the device no longer holds is answered with UNAVAILABLE and not
+with silence, whichever mode it is in.
+
 ## 10 Open questions
 
 | Question | Why it is open |
