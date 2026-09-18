@@ -345,6 +345,15 @@ name = "onestein-bdf"
 version = "0.0.0"
 
 [[package]]
+name = "onestein-contact"
+version = "0.0.0"
+dependencies = [
+ "onestein-bdf",
+ "onestein-crypto",
+ "x25519-dalek",
+]
+
+[[package]]
 name = "onestein-crypto"
 version = "0.0.0"
 dependencies = [

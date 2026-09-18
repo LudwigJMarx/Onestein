@@ -23,8 +23,9 @@ Draft 0. Every layer has a document and none has been reviewed by anyone. The
 implementation covers the encoding, the identifiers, the transport layer and
 the handshake's cryptography. The handshake's records are framed and parsed, and
 devices can be certified and verified. Devices can also be revoked, with the epoch
-rule that stops an old certificate resurrecting them. Contact establishment,
-sync and the relay are written down and not built.
+rule that stops an old certificate resurrecting them. Two identities can exchange a
+bundle in person or by link and derive rendezvous addresses from it. Sync
+beyond its identifiers and the relay are written down and not built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -45,10 +46,11 @@ sync and the relay are written down and not built.
 | `onestein-identity` | identity identifiers, device certificates and revocations, both signed twice | 21 tests |
 | `onestein-sync` | group and message identifiers | 10 tests |
 | `onestein-transport` | the whole transport layer: periods, rotation, tags, headers, frames, reordering windows | 39 tests |
+| `onestein-contact` | bundles, commitments, links, rendezvous, fingerprints | 16 tests |
 | `onestein-record` | the record framing both layers share | 9 tests |
 | `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations, records | 16 tests |
 
-139 tests, all derived from a written specification, none of them involving a
+155 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 
