@@ -14,6 +14,10 @@
 
 #![forbid(unsafe_code)]
 
+mod mac;
+
+pub use mac::{kdf, prf};
+
 use blake2::{Blake2b256, Digest};
 
 /// Length of every hash in the Bramble protocols, in bytes.

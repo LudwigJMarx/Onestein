@@ -1,0 +1,14 @@
+[package]
+name = "onestein-transport"
+version = "0.0.0"
+description = "Time-based key management for the transport layer"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+onestein-crypto = { path = "../crypto", version = "0.0.0" }
+
+[lints]
+workspace = true

@@ -59,3 +59,58 @@ fn moving_the_boundary_between_arguments_changes_the_hash() {
     assert_ne!(hash(&[b"a", b"bc"]), hash(&[b"ab", b"c"]));
     assert_ne!(hash(&[b"abc"]), hash(&[b"a", b"bc"]));
 }
+
+// --- PRF and KDF ----------------------------------------------------------
+//
+// Spec: `spec/05-primitives.md` §2 and §3. Vectors from scripts/vektoren.py,
+// oracle CPython hashlib with the key argument, which is BLAKE2b's own keying
+// and not a construction of ours.
+
+const KEY: [u8; 32] = [0x44; 32];
+
+const PRF_OF_KEY_AND_ABC: [u8; 32] = [
+    0x1c, 0xd5, 0x7e, 0xa0, 0x11, 0xa5, 0x3c, 0x29, 0x87, 0xb3, 0x07, 0xa6, 0x24, 0xd1, 0x09, 0x10,
+    0x0c, 0xe8, 0xe6, 0xf4, 0x2a, 0xa4, 0x99, 0x0a, 0xe0, 0x2c, 0xb1, 0x6e, 0x44, 0x89, 0x60, 0xd1,
+];
+const KDF_OF_KEY_AND_A_BC: [u8; 32] = [
+    0x7d, 0xb7, 0x6a, 0x3a, 0x12, 0x81, 0x90, 0x8d, 0xd6, 0xc2, 0xf8, 0x40, 0x1c, 0xf1, 0xfe, 0xee,
+    0xa8, 0x1b, 0xb8, 0x3c, 0xbb, 0xdb, 0x3e, 0x49, 0xc1, 0x78, 0x43, 0x49, 0x2d, 0xff, 0xa8, 0x67,
+];
+
+#[test]
+fn the_prf_is_keyed_blake2b_over_the_message_as_given() {
+    assert_eq!(onestein_crypto::prf(&KEY, b"abc"), PRF_OF_KEY_AND_ABC);
+}
+
+#[test]
+fn the_kdf_frames_its_arguments_like_the_hash_does() {
+    assert_eq!(
+        onestein_crypto::kdf(&KEY, &[b"a", b"bc"]),
+        KDF_OF_KEY_AND_A_BC
+    );
+}
+
+// The difference between the two is the whole reason both exist: the PRF
+// takes the message as given, so a caller who concatenates variable-length
+// values with it can have the boundary moved.
+#[test]
+fn the_kdf_is_not_the_prf_of_the_concatenation() {
+    assert_ne!(
+        onestein_crypto::kdf(&KEY, &[b"a", b"bc"]),
+        onestein_crypto::prf(&KEY, b"abc")
+    );
+    assert_ne!(
+        onestein_crypto::kdf(&KEY, &[b"a", b"bc"]),
+        onestein_crypto::kdf(&KEY, &[b"ab", b"c"])
+    );
+}
+
+// A keyed function with a different key is a different function. Stated as a
+// test because everything in the transport layer rests on it.
+#[test]
+fn a_different_key_gives_a_different_output() {
+    assert_ne!(
+        onestein_crypto::prf(&KEY, b"abc"),
+        onestein_crypto::prf(&[0x45; 32], b"abc")
+    );
+}

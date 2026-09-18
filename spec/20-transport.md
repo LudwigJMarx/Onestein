@@ -107,6 +107,17 @@ Each rotation is one-way, which is where forward secrecy comes from. After
 deriving the initial keys, both peers MUST delete the root key. Outgoing keys
 for period P are deleted at the end of P; incoming keys at the end of P+1.
 
+Rotation costs one derivation per period, so a device that has been away must
+catch up. An implementation MUST bound how many periods it will rotate in one
+step, and the bound MUST be at least 1024, which is about three years on a
+25-hour period. Beyond the bound the keys are treated as lost and the contact
+is established again.
+
+The bound is not a performance concern. The period a device rotates towards
+comes from a clock, and a clock is something an adversary may be able to
+move; without a bound, one wrong number turns into an unbounded loop inside
+the layer that has not authenticated anything yet.
+
 ## 6 Wire
 
 A stream is a **tag**, a **stream header**, and one or more **frames**.
