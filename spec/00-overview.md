@@ -74,7 +74,8 @@ bound into the keys derived below it. Nothing negotiates in the clear.
 | Primitives | `05-primitives.md` | Notation, the hash and key derivation construction, the algorithm list | HASH and KDF follow Bramble's framing, credited there. The algorithm list is ours |
 | Encoding | `10-encoding.md` | Canonical, length-framed binary encoding | **BDF version 1**, unchanged, as published in briar-spec. It is compact, unambiguous and already implemented here. Inventing a fourth binary encoding would be novelty for its own sake |
 | Transport | `20-transport.md` | Tag, stream header, frames; keys rotated per time period; reordering windows | Follows **BTP version 4**'s construction, with this project's labels and an added version binding. Credited, not copied: the design is published and it is the part a green-field attempt is most likely to get wrong |
-| Handshake | `30-handshake.md` | Hybrid X25519 and ML-KEM key agreement between two identities | Our draft in `hybrid-handshake.md`, to be rewritten as the native handshake rather than an extension |
+| Handshake | `30-handshake.md` | Hybrid X25519 and ML-KEM key agreement between two devices | Ours. Authentication by decapsulation against certified static keys, as in KEMTLS, rather than by signature |
+| Contact establishment | `35-contact.md` | How two identities first learn each other's root keys | Pending. Bramble answers it with BQP and BRP; the sizes here rule out a straight copy |
 | Identity | `40-identity.md` | An identity, its devices, and recovery. New | Nothing to inherit. R6 and R7 |
 | Sync | `50-sync.md` | Message graph, offers and requests, retention, and a record type for "I no longer have it" | BSP's graph model, with the flooding assumption removed and the silence we found filled. R9 |
 | Relay | `60-relay.md` | Optional store-and-forward queues addressed by pairwise pseudonymous identifiers. New | R8. Closest prior art is SimpleX's queue model and Briar's Mailbox |

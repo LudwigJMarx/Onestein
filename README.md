@@ -28,7 +28,8 @@ is finished.
 | [spec/05-primitives.md](spec/05-primitives.md) | notation, hash and key derivation, algorithms | written |
 | [spec/10-encoding.md](spec/10-encoding.md) | canonical binary encoding | written. BDF version 1 unchanged, plus three rules BDF leaves open |
 | `spec/20-transport.md` | tags, stream headers, frames, key rotation | pending |
-| [spec/hybrid-handshake.md](spec/hybrid-handshake.md) | hybrid X25519 and ML-KEM key agreement | written as an extension of Briar's handshake, to be rewritten as the native one |
+| [spec/30-handshake.md](spec/30-handshake.md) | hybrid key agreement, authentication by decapsulation | written |
+| `spec/35-contact.md` | how two identities first meet | pending |
 | [spec/40-identity.md](spec/40-identity.md) | identity, devices, recovery | written |
 | `spec/50-sync.md` | message graph, offers, requests, retention | pending |
 | `spec/60-relay.md` | optional store-and-forward | pending |

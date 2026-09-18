@@ -1,7 +1,14 @@
 # Hybrid Post-Quantum Key Agreement for BHP, draft 0
 
-A proposal by the Onestein project. It is **not** part of Bramble, and the
-Briar Project has neither reviewed nor adopted it. Licensed CC BY-SA 4.0 to
+A proposal by the Onestein project for **Briar's** Bramble stack. It is not
+part of Onestein's own stack and not part of Bramble either: the Briar
+Project has neither reviewed nor adopted it.
+
+Kept because it stands on its own and could still be offered upstream. Where
+Onestein's own handshake goes further, see `spec/30-handshake.md`: this
+proposal signs, that one authenticates by decapsulation, because Bramble has
+no per-device static KEM key to encapsulate to and Onestein's identity layer
+does. Licensed CC BY-SA 4.0 to
 match `briar-spec`, so that adopting it upstream raises no licence question.
 
 Status: unimplemented, unreviewed. No part of this has been run.
