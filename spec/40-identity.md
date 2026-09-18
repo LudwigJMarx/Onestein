@@ -29,9 +29,19 @@ device because the root key said so, not because the contact met it.
 | Device signing | Ed25519 | device | 32 | authorship of messages a third party must verify |
 | Device agreement, classical | X25519 | device | 32 | the handshake |
 | Device agreement, post-quantum | ML-KEM-768 (FIPS 203) | device | 1184 | the handshake |
+| Contact, classical | X25519 | identity | 32 | keying handshake mode in `20-transport.md` §3, nothing else |
 
 Both root signatures are always produced and both MUST verify. A certificate
 that carries only one of them is refused. Hybrid means both, never either.
+
+The contact key is the one identity-level key that is not a signing key, and
+it is the exception to the paragraph below: it is derived from the recovery
+seed and therefore exists on every device of the identity. It provides **no
+forward secrecy** and is used for exactly one thing, concealing the handshake
+that has not happened yet. It never protects a message. Without it the one
+exchange every contact begins with would be the one a censor recognises on
+sight, and a device that has just been recovered could not open a channel to
+a contact at all.
 
 Device keys are per device and never leave it. There is no key that, once
 taken from one device, opens another.
@@ -117,6 +127,7 @@ The root key pair is derived from a 32-byte **recovery seed**:
 
 - root_ed25519_seed = KDF(seed, "org.onestein.identity/ROOT_ED25519")
 - root_mldsa_seed = KDF(seed, "org.onestein.identity/ROOT_MLDSA")
+- contact_x25519_seed = KDF(seed, "org.onestein.identity/CONTACT_KEY")
 
 Both algorithms generate a key pair deterministically from a 32-byte seed, so
 the same seed yields the same identity on any device, forever, with no server

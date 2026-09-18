@@ -27,7 +27,7 @@ is finished.
 | [spec/00-overview.md](spec/00-overview.md) | requirements, threat model, layering, decisions | written |
 | [spec/05-primitives.md](spec/05-primitives.md) | notation, hash and key derivation, algorithms | written |
 | [spec/10-encoding.md](spec/10-encoding.md) | canonical binary encoding | written. BDF version 1 unchanged, plus three rules BDF leaves open |
-| `spec/20-transport.md` | tags, stream headers, frames, key rotation | pending |
+| [spec/20-transport.md](spec/20-transport.md) | tags, stream headers, frames, key rotation | written |
 | [spec/30-handshake.md](spec/30-handshake.md) | hybrid key agreement, authentication by decapsulation | written |
 | `spec/35-contact.md` | how two identities first meet | pending |
 | [spec/40-identity.md](spec/40-identity.md) | identity, devices, recovery | written |
