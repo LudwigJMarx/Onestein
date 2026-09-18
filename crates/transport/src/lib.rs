@@ -9,7 +9,10 @@
 
 #![forbid(unsafe_code)]
 
+mod window;
 mod wire;
+
+pub use window::{StreamCounter, WINDOW_LEN, Window, WindowError};
 
 pub use wire::{
     AUTH_LEN, FRAME_HEADER_LEN, FrameHeader, MAX_FRAME_LEN, MAX_FRAME_NUMBER, MAX_FRAME_PAYLOAD,
