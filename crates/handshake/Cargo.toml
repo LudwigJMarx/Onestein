@@ -10,7 +10,11 @@ rust-version.workspace = true
 [dependencies]
 ml-kem = "0.3.2"
 onestein-crypto = { path = "../crypto", version = "0.0.0" }
+onestein-record = { path = "../record", version = "0.0.0" }
 x25519-dalek = { version = "3.0.0", features = ["static_secrets"] }
+
+[dev-dependencies]
+onestein-record = { path = "../record", version = "0.0.0" }
 
 [lints]
 workspace = true

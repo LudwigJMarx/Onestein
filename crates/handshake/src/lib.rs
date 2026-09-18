@@ -15,6 +15,14 @@
 
 #![forbid(unsafe_code)]
 
+mod records;
+
+pub use records::{
+    HandshakeRecord, TYPE_CERTIFICATE_ID, TYPE_CERTIFICATE_REQUEST, TYPE_CONFIRMATION,
+    TYPE_DEVICE_CERTIFICATE, TYPE_ENCAPSULATIONS, TYPE_EPHEMERAL_KEYS, decode_records,
+    encode_record,
+};
+
 use ml_kem::array::Array;
 use ml_kem::kem::{Decapsulate, KeyExport};
 use ml_kem::ml_kem_768::{Ciphertext, DecapsulationKey, EncapsulationKey};
@@ -67,8 +75,10 @@ pub enum Error {
     /// point of small order. The handshake stops rather than continuing with
     /// a secret both the peer and anyone watching can predict.
     DegenerateSharedSecret,
-    /// An encapsulation key or ciphertext was not the length its algorithm
-    /// defines.
+    /// A record could not be framed or unframed.
+    Record(onestein_record::Error),
+    /// An encapsulation key, ciphertext or payload was not the length its
+    /// algorithm or record type defines.
     WrongLength {
         /// Bytes the algorithm requires.
         expected: usize,
@@ -157,10 +167,11 @@ pub fn encapsulate(
     encapsulation_key: &[u8; KEM_ENCAPSULATION_KEY_LEN],
     randomness: &[u8; 32],
 ) -> Result<([u8; KEM_CIPHERTEXT_LEN], [u8; HASH_LEN]), Error> {
-    let key = EncapsulationKey::new(&Array(*encapsulation_key)).map_err(|_| Error::WrongLength {
-        expected: KEM_ENCAPSULATION_KEY_LEN,
-        given: encapsulation_key.len(),
-    })?;
+    let key =
+        EncapsulationKey::new(&Array(*encapsulation_key)).map_err(|_| Error::WrongLength {
+            expected: KEM_ENCAPSULATION_KEY_LEN,
+            given: encapsulation_key.len(),
+        })?;
     let (ciphertext, secret) = key.encapsulate_deterministic(&Array(*randomness));
     Ok((fixed(&ciphertext), fixed(&secret)))
 }

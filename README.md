@@ -21,8 +21,8 @@ It does not interoperate with Briar.
 
 Draft 0. Every layer has a document and none has been reviewed by anyone. The
 implementation covers the encoding, the identifiers, the transport layer and
-the handshake's cryptography. Contact establishment, sync and the relay are
-written down and not built, and no layer has a record encoder yet.
+the handshake's cryptography. The handshake's records are framed and parsed.
+Contact establishment, sync and the relay are written down and not built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -43,9 +43,10 @@ written down and not built, and no layer has a record encoder yet.
 | `onestein-identity` | identity identifiers | 3 tests |
 | `onestein-sync` | group and message identifiers | 10 tests |
 | `onestein-transport` | the whole transport layer: periods, rotation, tags, headers, frames, reordering windows | 39 tests |
-| `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations | 10 tests |
+| `onestein-record` | the record framing both layers share | 9 tests |
+| `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations, records | 16 tests |
 
-106 tests, all derived from a written specification, none of them involving a
+121 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 

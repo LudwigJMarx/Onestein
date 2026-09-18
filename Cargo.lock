@@ -305,6 +305,7 @@ version = "0.0.0"
 dependencies = [
  "ml-kem",
  "onestein-crypto",
+ "onestein-record",
  "x25519-dalek",
 ]
 
@@ -314,6 +315,10 @@ version = "0.0.0"
 dependencies = [
  "onestein-crypto",
 ]
+
+[[package]]
+name = "onestein-record"
+version = "0.0.0"
 
 [[package]]
 name = "onestein-sync"
