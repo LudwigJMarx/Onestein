@@ -64,7 +64,12 @@ already use:
 onestein:1:<base32(contact_x25519_pub || commitment)>
 ```
 
-64 bytes of payload, about 104 characters of base32, plus the prefix. The
+Base32 is RFC 4648's alphabet, upper case, **without padding**. Padding in a
+link is noise that people retype wrongly, and the length is fixed anyway. A
+reader accepts lower case and ignores whitespace, because a link crosses
+channels that reflow text; an encoder never produces either.
+
+64 bytes of payload become 103 characters, plus the prefix. The
 link carries the contact key in the clear on purpose: without it there is no
 shared secret, and without a shared secret two devices that have never met
 cannot find each other at all (§5).
@@ -128,8 +133,8 @@ Two people who paired at a distance can check later, over a channel they
 trust more, that they hold the right keys:
 
 - The fingerprint is the identity_id (`40-identity.md` §3), 32 bytes.
-- It is shown as 24 groups of four base32 characters, or read aloud from a
-  word list, which does not exist yet.
+- It is shown as 13 groups of four base32 characters, 52 characters in all,
+  or read aloud from a word list, which does not exist yet.
 
 A mismatch means the first exchange was intercepted. There is no recovery
 from that inside this protocol: the contact is deleted and established again
