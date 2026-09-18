@@ -14,6 +14,8 @@ Dateien, die sich aufeinander berufen, ohne sich zu treffen.
 
 ── WAS ER PRUEFT ───────────────────────────────────────────────────────────
 
+Alle .md-Dateien unter spec/, docs/ und in der Wurzel:
+
 1. `dateiname.md` in Backticks: die Datei existiert, relativ zur verweisenden.
 2. `dateiname.md` §N: die Zieldatei hat einen Abschnitt `## N ...`.
 3. [text](pfad): der Pfad existiert.
@@ -35,6 +37,9 @@ import sys
 from pathlib import Path
 
 DOKUMENTE = ("spec", "docs")
+# Dazu die Markdown-Dateien in der Wurzel. Die README verweist am haeufigsten
+# nach spec/ und ist die Datei, die ein Leser zuerst sieht und die zuerst
+# verrottet.
 BACKTICK = re.compile(r"`([0-9A-Za-z._-]+\.md)`(?:\s+§(\d+))?")
 MARKDOWN_LINK = re.compile(r"\[[^\]]*\]\(([^)#]+\.md)(?:#[^)]*)?\)")
 ABSCHNITT = re.compile(r"^##\s+(\d+)\s")
@@ -55,9 +60,8 @@ def main() -> int:
     wurzel = argumente.wurzel.resolve()
 
     dateien = sorted(
-        pfad
-        for ordner in DOKUMENTE
-        for pfad in (wurzel / ordner).rglob("*.md")
+        [pfad for ordner in DOKUMENTE for pfad in (wurzel / ordner).rglob("*.md")]
+        + list(wurzel.glob("*.md"))
     )
     if not dateien:
         print(f"pruefe-verweise: keine Dokumente unter {'/, '.join(DOKUMENTE)}/", file=sys.stderr)

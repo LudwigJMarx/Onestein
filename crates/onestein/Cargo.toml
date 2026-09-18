@@ -1,0 +1,22 @@
+[package]
+name = "onestein"
+version = "0.0.0"
+description = "A messaging protocol stack for networks that are slow, intermittent, censored or absent"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+onestein-bdf = { path = "../bdf", version = "0.0.0" }
+onestein-contact = { path = "../contact", version = "0.0.0" }
+onestein-crypto = { path = "../crypto", version = "0.0.0" }
+onestein-handshake = { path = "../handshake", version = "0.0.0" }
+onestein-identity = { path = "../identity", version = "0.0.0" }
+onestein-record = { path = "../record", version = "0.0.0" }
+onestein-relay = { path = "../relay", version = "0.0.0" }
+onestein-sync = { path = "../sync", version = "0.0.0" }
+onestein-transport = { path = "../transport", version = "0.0.0" }
+
+[lints]
+workspace = true

@@ -353,6 +353,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "onestein"
+version = "0.0.0"
+dependencies = [
+ "onestein-bdf",
+ "onestein-contact",
+ "onestein-crypto",
+ "onestein-handshake",
+ "onestein-identity",
+ "onestein-record",
+ "onestein-relay",
+ "onestein-sync",
+ "onestein-transport",
+]
+
+[[package]]
 name = "onestein-bdf"
 version = "0.0.0"
 

@@ -45,6 +45,7 @@ a notice.
 | `ml-kem` | 0.3.2 | Apache-2.0 OR MIT |
 | `module-lattice` | 0.2.3 | Apache-2.0 OR MIT |
 | `num-traits` | 0.2.19 | MIT OR Apache-2.0 |
+| `onestein` | 0.0.0 | Apache-2.0 OR MIT |
 | `opaque-debug` | 0.3.1 | MIT OR Apache-2.0 |
 | `pkcs8` | 0.11.0 | Apache-2.0 OR MIT |
 | `poly1305` | 0.8.0 | Apache-2.0 OR MIT |
