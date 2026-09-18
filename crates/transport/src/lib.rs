@@ -9,6 +9,14 @@
 
 #![forbid(unsafe_code)]
 
+mod wire;
+
+pub use wire::{
+    AUTH_LEN, FRAME_HEADER_LEN, FrameHeader, MAX_FRAME_LEN, MAX_FRAME_NUMBER, MAX_FRAME_PAYLOAD,
+    NONCE_LEN, STREAM_HEADER_LEN, StreamHeader, WireError, open_frame_body, open_frame_header,
+    open_stream_header, seal_frame_body, seal_frame_header, seal_stream_header,
+};
+
 use onestein_crypto::{HASH_LEN, kdf, prf};
 
 const A_TAG_KEY: &[u8] = b"org.onestein.transport/A_TAG_KEY";

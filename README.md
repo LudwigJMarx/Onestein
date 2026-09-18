@@ -20,9 +20,9 @@ It does not interoperate with Briar.
 ## State
 
 Draft 0. Every layer has a document and none has been reviewed by anyone. The
-implementation covers the encoding, the identifiers and the transport's key
-management; the wire format, the handshake and everything above them are
-written down and not yet built.
+implementation covers the encoding, the identifiers and the transport, all but
+its reordering windows; the handshake and everything above it are written down
+and not yet built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -42,9 +42,9 @@ written down and not yet built.
 | `onestein-crypto` | hash, PRF and key derivation over BLAKE2b | 9 tests, checked against CPython's `hashlib` |
 | `onestein-identity` | identity identifiers | 3 tests |
 | `onestein-sync` | group and message identifiers | 10 tests |
-| `onestein-transport` | time periods, key rotation, stream tags | 13 tests. The wire format, header and frames, is not built |
+| `onestein-transport` | time periods, key rotation, tags, stream headers, frames | 26 tests. Reordering windows are not built |
 
-70 tests, all derived from a written specification, none of them involving a
+83 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 
