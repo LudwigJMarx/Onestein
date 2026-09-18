@@ -11,7 +11,10 @@
 #![forbid(unsafe_code)]
 
 mod message;
+mod peer;
 mod records;
+
+pub use peer::{MAX_BACKOFF_DOUBLINGS, PeerMessageState};
 
 pub use records::{
     Deliverability, SyncRecord, TYPE_ACK, TYPE_MESSAGE, TYPE_OFFER, TYPE_REQUEST, TYPE_UNAVAILABLE,
