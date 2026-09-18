@@ -129,10 +129,25 @@ byte.
 | Type | Name | Payload |
 |---|---|---|
 | 0 | `ACK` | one or more message identifiers the sender has seen |
-| 1 | `MESSAGE` | group identifier, timestamp, author, device key, signature, body |
+| 1 | `MESSAGE` | see below |
 | 2 | `OFFER` | one or more identifiers the sender holds and is sharing |
 | 3 | `REQUEST` | one or more identifiers the sender wants |
 | 4 | `UNAVAILABLE` | one or more identifiers the sender cannot supply |
+
+A MESSAGE payload has a fixed layout, not an encoded dictionary. Every field
+but the last has a fixed length, so there is nothing for an encoding to
+describe, and the body is the only thing whose length has to be known, which
+the record header already gives:
+
+- payload = group_id (32) || int_64(timestamp) || author (32) ||
+  device_key (32) || signature (64) || body
+
+168 bytes before the body. A body is at most 32 KiB (§2), so a message record
+is at most 32,936 bytes and fits the 48 KiB a record may carry.
+
+The signature covers `to_sign` from §3, which covers the message identifier,
+which covers every other field including the body. Nothing in this payload is
+outside what was signed.
 
 There is no version negotiation record. Bramble has one; here the versions
 were agreed when the root key was derived (`30-handshake.md` §5), and a peer
