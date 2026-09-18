@@ -1,0 +1,15 @@
+[package]
+name = "onestein-relay"
+version = "0.0.0"
+description = "Optional store-and-forward queues at an untrusted relay"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+ed25519-dalek = "3.0.0"
+onestein-crypto = { path = "../crypto", version = "0.0.0" }
+
+[lints]
+workspace = true
