@@ -22,8 +22,9 @@ It does not interoperate with Briar.
 Draft 0. Every layer has a document and none has been reviewed by anyone. The
 implementation covers the encoding, the identifiers, the transport layer and
 the handshake's cryptography. The handshake's records are framed and parsed, and
-devices can be certified and verified. Contact establishment, sync, the relay
-and revocation are written down and not built.
+devices can be certified and verified. Devices can also be revoked, with the epoch
+rule that stops an old certificate resurrecting them. Contact establishment,
+sync and the relay are written down and not built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -41,13 +42,13 @@ and revocation are written down and not built.
 |---|---|---|
 | `onestein-bdf` | encoding | reader, writer, strict mode for anything that gets hashed. 35 tests |
 | `onestein-crypto` | hash, PRF and key derivation over BLAKE2b | 9 tests, checked against CPython's `hashlib` |
-| `onestein-identity` | identity identifiers, device certificates signed twice | 12 tests |
+| `onestein-identity` | identity identifiers, device certificates and revocations, both signed twice | 21 tests |
 | `onestein-sync` | group and message identifiers | 10 tests |
 | `onestein-transport` | the whole transport layer: periods, rotation, tags, headers, frames, reordering windows | 39 tests |
 | `onestein-record` | the record framing both layers share | 9 tests |
 | `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations, records | 16 tests |
 
-130 tests, all derived from a written specification, none of them involving a
+139 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 

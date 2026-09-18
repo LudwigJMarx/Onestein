@@ -10,6 +10,9 @@
 #![forbid(unsafe_code)]
 
 mod certificate;
+mod revocation;
+
+pub use revocation::{Revocation, accept_epoch, verify_revocation};
 
 pub use certificate::{
     DeviceCertificate, ED25519_SIGNATURE_LEN, KEM_ENCAPSULATION_KEY_LEN, MLDSA_SIGNATURE_LEN,
@@ -52,6 +55,14 @@ pub enum Error {
     BadSignature,
     /// The signing algorithm refused.
     Signing,
+    /// The epoch is below the highest one this contact has recorded for that
+    /// identity, so accepting it could resurrect a revoked device.
+    EpochInThePast {
+        /// The highest epoch recorded.
+        recorded: u64,
+        /// The epoch offered.
+        given: u64,
+    },
 }
 
 /// An identity identifier.

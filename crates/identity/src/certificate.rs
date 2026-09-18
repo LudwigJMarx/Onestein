@@ -21,6 +21,12 @@ use crate::{Error, IDENTITY_VERSION, IdentityId};
 
 const CERTIFICATE_LABEL: &[u8] = b"org.onestein.identity/DEVICE_CERTIFICATE";
 
+/// A revocation's label. Different from the certificate's because the two
+/// structures share four of their field names, and one label would let a
+/// signature keep its meaning while the fields around it are reinterpreted
+/// (`spec/40-identity.md` §5).
+pub(crate) const REVOCATION_LABEL: &[u8] = b"org.onestein.identity/DEVICE_REVOCATION";
+
 /// ML-DSA takes a context string and it is empty here, in every signature
 /// this stack makes. The domain separation is in `to_sign`, and a second
 /// mechanism saying the same thing is a second one to get wrong
@@ -149,8 +155,13 @@ impl RootKeys {
     /// [`Error::OutOfRange`] from encoding, [`Error::Signing`] if ML-DSA
     /// refuses.
     pub fn sign_certificate(&self, certificate: &DeviceCertificate) -> Result<Vec<u8>, Error> {
-        let encoded = certificate.encode()?;
-        let to_sign = hash(&[CERTIFICATE_LABEL, &encoded]);
+        self.sign_with_label(CERTIFICATE_LABEL, certificate.encode()?)
+    }
+
+    /// Signs any of this layer's structures and wraps it with both
+    /// signatures. The label is what decides which structure it is.
+    pub(crate) fn sign_with_label(&self, label: &[u8], encoded: Vec<u8>) -> Result<Vec<u8>, Error> {
+        let to_sign = hash(&[label, &encoded]);
 
         let ed25519 = self.ed25519.sign(&to_sign).to_bytes();
         let mldsa = self
@@ -183,23 +194,8 @@ pub fn verify_certificate(
     root_ed25519: &[u8],
     root_mldsa: &[u8],
 ) -> Result<DeviceCertificate, Error> {
-    // Length-checks the root keys on the way, before anything is verified
-    // against them.
-    let expected_identity = IdentityId::derive(root_ed25519, root_mldsa)?;
-
-    let fields = dictionary(container)?;
-    let signed = raw(&fields, "c")?;
-    let ed_signature = raw(&fields, "e")?;
-    let pq_signature = raw(&fields, "p")?;
-
-    // Verify before parsing. A certificate that has not been authenticated is
-    // an attacker's data structure, and parsing it first means the parser is
-    // the part that faces the attacker.
-    let to_sign = hash(&[CERTIFICATE_LABEL, signed]);
-    verify_ed25519(root_ed25519, &to_sign, ed_signature)?;
-    verify_mldsa(root_mldsa, &to_sign, pq_signature)?;
-
-    let body = dictionary(signed)?;
+    let (body, expected_identity) =
+        open_container(container, root_ed25519, root_mldsa, CERTIFICATE_LABEL)?;
     if integer(&body, "v")? != i64::from(IDENTITY_VERSION) {
         return Err(Error::Malformed);
     }
@@ -219,30 +215,54 @@ pub fn verify_certificate(
     })
 }
 
+/// Opens a signed container: both signatures over the bytes inside, then the
+/// bytes parsed.
+///
+/// Verify before parsing. What has not been authenticated is an attacker's
+/// data structure, and parsing it first puts the parser in front.
+pub(crate) fn open_container(
+    container: &[u8],
+    root_ed25519: &[u8],
+    root_mldsa: &[u8],
+    label: &[u8],
+) -> Result<(Vec<(String, Value)>, IdentityId), Error> {
+    // Length-checks the root keys on the way, before anything is verified
+    // against them.
+    let expected_identity = IdentityId::derive(root_ed25519, root_mldsa)?;
+
+    let fields = dictionary(container)?;
+    let signed = raw(&fields, "c")?;
+    let to_sign = hash(&[label, signed]);
+    verify_ed25519(root_ed25519, &to_sign, raw(&fields, "e")?)?;
+    verify_mldsa(root_mldsa, &to_sign, raw(&fields, "p")?)?;
+
+    Ok((dictionary(signed)?, expected_identity))
+}
+
 /// Parses canonical BDF into a dictionary. Non-canonical input is refused,
 /// because these bytes are hashed (`spec/10-encoding.md` §2.3).
-fn dictionary(bytes: &[u8]) -> Result<Vec<(String, Value)>, Error> {
+pub(crate) fn dictionary(bytes: &[u8]) -> Result<Vec<(String, Value)>, Error> {
     match from_bytes_canonical(bytes) {
         Ok(Value::Dict(entries)) => Ok(entries),
         _ => Err(Error::Malformed),
     }
 }
 
-fn raw<'a>(fields: &'a [(String, Value)], key: &str) -> Result<&'a [u8], Error> {
+pub(crate) fn raw<'a>(fields: &'a [(String, Value)], key: &str) -> Result<&'a [u8], Error> {
     match fields.iter().find(|(name, _)| name == key) {
         Some((_, Value::Raw(bytes))) => Ok(bytes),
         _ => Err(Error::Malformed),
     }
 }
 
-fn integer(fields: &[(String, Value)], key: &str) -> Result<i64, Error> {
+pub(crate) fn integer(fields: &[(String, Value)], key: &str) -> Result<i64, Error> {
     match fields.iter().find(|(name, _)| name == key) {
         Some((_, Value::Int(number))) => Ok(*number),
         _ => Err(Error::Malformed),
     }
 }
 
-fn exact<const N: usize>(bytes: &[u8]) -> Result<[u8; N], Error> {
+pub(crate) fn exact<const N: usize>(bytes: &[u8]) -> Result<[u8; N], Error> {
     <[u8; N]>::try_from(bytes).map_err(|_| Error::Malformed)
 }
 
