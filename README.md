@@ -115,10 +115,13 @@ Not affiliated with the Briar Project.
 
 ## State
 
-Draft 0, released as v0.1.0. Every layer has a document and an
-implementation. The version is the crates', not the protocol's: every layer
-in the specification is still at version 1 and every document is still a
-draft.
+Draft 0. Tagged v0.1.0 and published as a **prerelease**, which is what it
+is: nothing here is stable and nothing has been reviewed. GitHub therefore
+reports no latest release, deliberately.
+
+Every layer has a document and an implementation. The version is the crates',
+not the protocol's: every layer in the specification is still at version 1 and
+every document is still a draft.
 
 ```
 229 tests, clippy clean, 64 third-party packages named
