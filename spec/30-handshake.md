@@ -108,6 +108,7 @@ moved.
 - root_key = HASH(
   "org.onestein.handshake/ROOT_KEY",
   int_8(handshake_version), int_8(identity_version), int_8(primitives_version),
+  int_8(transport_version),
   dh_ephemeral, dh_ephemeral_static, dh_static_ephemeral,
   kem_ephemeral_a, kem_ephemeral_b, kem_static_a, kem_static_b,
   identity_id_a, identity_id_b,
@@ -124,10 +125,12 @@ moved.
 A peer that receives a confirmation differing from the one it expects aborts
 and keeps nothing.
 
-Three versions are inside the hash, not beside it. A peer cannot be talked
-down to an older handshake, an older identity format or an older algorithm
-set, because a rewritten version byte produces two different root keys and
-the confirmation fails. This is the rule from `00-overview.md` §5.4, and it
+Four versions are inside the hash, not beside it. A peer cannot be talked
+down to an older handshake, an older identity format, an older algorithm set
+or an older transport, because a rewritten version byte produces two
+different root keys and the confirmation fails. The transport version is in
+there although the transport runs after this protocol, precisely so that the
+key cannot be carried into a weaker one. This is the rule from `00-overview.md` §5.4, and it
 exists because Bramble's own handshake does not do it: BHP 0.1 leaves its
 minor version out of the master key, which is harmless while only one version
 exists and stops being harmless the day a second one does.
