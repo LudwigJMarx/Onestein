@@ -106,8 +106,8 @@ horizon cannot verify the history before it, and must not claim to.
 
 ## 6 Retention
 
-The group descriptor declares a **retention policy**, which is advice to
-members rather than a rule enforced against them:
+A group may declare a **retention policy**, which is advice to members rather
+than a rule enforced against them:
 
 | Policy | Meaning |
 |---|---|
@@ -120,6 +120,17 @@ retention policy that claimed to bind other people's devices would be a
 promise about a device the promiser does not own, which `40-identity.md` §5
 already refuses to make about revocation and this document refuses to make
 here.
+
+The policy is a canonical BDF value. A client that wants every member to see
+the same advice puts it in the group descriptor, which is the only thing that
+travels with a group; the sync layer does not look inside a descriptor (§1),
+and it applies a policy only to the device's own store, when the client asks.
+
+**Age counts from when this device received a message, not from the timestamp
+in it.** A timestamp is what the author wrote. A message dated next year would
+never be dropped, and one dated 1970 would be dropped on arrival, both at the
+sender's choosing. The time a device received something is the one clock in
+this stack that nobody else writes to.
 
 ## 7 Records
 
