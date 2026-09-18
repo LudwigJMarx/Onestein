@@ -10,6 +10,16 @@
 
 #![forbid(unsafe_code)]
 
+mod message;
+mod records;
+
+pub use records::{
+    Deliverability, SyncRecord, TYPE_ACK, TYPE_MESSAGE, TYPE_OFFER, TYPE_REQUEST, TYPE_UNAVAILABLE,
+    decode_records, deliverability, encode_record,
+};
+
+pub use message::{MESSAGE_HEADER_LEN, Message, SIGNATURE_LEN, SignedMessage, decode_message};
+
 use onestein_crypto::{HASH_LEN, hash};
 use onestein_identity::IdentityId;
 
@@ -28,6 +38,9 @@ pub const MAX_GROUP_DESCRIPTOR_LEN: usize = 16 * 1024;
 /// The longest message body BSP accepts, in bytes.
 pub const MAX_MESSAGE_BODY_LEN: usize = 32 * 1024;
 
+/// Label for what a device key signs over a message identifier.
+pub(crate) const MESSAGE_SIGNATURE_LABEL: &[u8] = b"org.onestein.sync/MESSAGE_SIGNATURE";
+
 /// Why a group or message could not be named.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Error {
@@ -35,6 +48,10 @@ pub enum Error {
     GroupDescriptorTooLong(usize),
     /// The message body was longer than [`MAX_MESSAGE_BODY_LEN`].
     MessageBodyTooLong(usize),
+    /// A payload is not the structure it should be.
+    Malformed,
+    /// The signature does not belong to the device key the message names.
+    BadSignature,
 }
 
 /// A group identifier.
@@ -74,9 +91,28 @@ impl GroupId {
     pub const fn as_bytes(&self) -> &[u8; HASH_LEN] {
         &self.0
     }
+
+    /// Takes an identifier that came off a wire.
+    ///
+    /// Nothing is checked, because there is nothing to check: an identifier
+    /// is a hash, and whether it is the right one shows when the message it
+    /// names arrives and is hashed.
+    #[must_use]
+    pub const fn from_bytes(bytes: [u8; HASH_LEN]) -> Self {
+        Self(bytes)
+    }
 }
 
 impl MessageId {
+    /// Takes an identifier that came off a wire.
+    ///
+    /// Nothing is checked: an identifier is a hash, and whether it is the
+    /// right one shows when the message it names arrives and is hashed.
+    #[must_use]
+    pub const fn from_bytes(bytes: [u8; HASH_LEN]) -> Self {
+        Self(bytes)
+    }
+
     /// Derives the identifier of a message from its group, its timestamp in
     /// milliseconds since the Unix epoch, its author, the device key that
     /// signs it, and its body.

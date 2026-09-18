@@ -106,4 +106,14 @@ impl IdentityId {
     pub const fn as_bytes(&self) -> &[u8; HASH_LEN] {
         &self.0
     }
+
+    /// Takes an identifier that came off a wire.
+    ///
+    /// Nothing is checked here. An identity identifier is a hash of two root
+    /// keys, and it is checked where those keys are: when a certificate is
+    /// verified (`spec/40-identity.md` §4).
+    #[must_use]
+    pub const fn from_bytes(bytes: [u8; HASH_LEN]) -> Self {
+        Self(bytes)
+    }
 }

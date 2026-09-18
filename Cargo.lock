@@ -388,8 +388,10 @@ version = "0.0.0"
 name = "onestein-sync"
 version = "0.0.0"
 dependencies = [
+ "ed25519-dalek",
  "onestein-crypto",
  "onestein-identity",
+ "onestein-record",
 ]
 
 [[package]]

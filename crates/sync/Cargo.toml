@@ -10,6 +10,12 @@ rust-version.workspace = true
 [dependencies]
 onestein-crypto = { path = "../crypto", version = "0.0.0" }
 onestein-identity = { path = "../identity", version = "0.0.0" }
+onestein-record = { path = "../record", version = "0.0.0" }
+ed25519-dalek = "3.0.0"
+
+[dev-dependencies]
+ed25519-dalek = "3.0.0"
+onestein-record = { path = "../record", version = "0.0.0" }
 
 [lints]
 workspace = true
