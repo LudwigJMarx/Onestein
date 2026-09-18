@@ -96,6 +96,39 @@ duplicated across relays or arrive out of order, which is what the sync layer
 already handles and what `20-transport.md` reordering windows already expect.
 A sender that writes to three relays is a sender using three transports.
 
+## 4a The relay's own protocol
+
+Everything above describes what a relay does. This is what it says, framed as
+`05-primitives.md` §4 defines, with the relay version in the version byte.
+
+A blob is named by its content: blob_id = HASH("org.onestein.relay/BLOB",
+int_8(relay_version), blob). The name is what a reader deletes by, and
+deriving it from the content means a relay cannot hand out a name for a blob
+it does not have.
+
+| Type | Name | Direction | Payload |
+|---|---|---|---|
+| 0 | `REGISTER` | to relay | queue_id (32), write_public (32), read_public (32) |
+| 1 | `CHALLENGE_REQUEST` | to relay | queue_id (32), right (1: 0 write, 1 read) |
+| 2 | `CHALLENGE` | from relay | challenge (32) |
+| 3 | `WRITE` | to relay | queue_id (32), proof (64), blob |
+| 4 | `READ` | to relay | queue_id (32), proof (64) |
+| 5 | `BLOB` | from relay | blob_id (32), blob |
+| 6 | `DELETE` | to relay | queue_id (32), proof (64), blob_id (32) |
+| 7 | `OK` | from relay | empty |
+| 8 | `EMPTY` | from relay | empty |
+| 9 | `REFUSED` | from relay | reason (1) |
+
+A challenge is good for one operation on one queue, and the relay forgets it
+when it is used or when the connection ends. Reading does not delete: the
+reader deletes, with a proof, once it has the bytes. A relay that deleted on
+read would lose a message whose reader crashed while receiving it.
+
+`REFUSED` carries a number and not a sentence: 0 unknown queue, 1 bad proof,
+2 too large, 3 queue full, 4 unknown challenge. A relay that explained itself
+in prose would be a relay whose replies differ by version and locale, which is
+one more thing for a censor to match on.
+
 ## 5 Limits and expiry
 
 Set by the relay and told to its users, not negotiated:
