@@ -20,8 +20,9 @@ It does not interoperate with Briar.
 ## State
 
 Draft 0. Every layer has a document and none has been reviewed by anyone. The
-implementation covers the encoding, the identifiers and the transport layer;
-the handshake and everything above it are written down and not yet built.
+implementation covers the encoding, the identifiers, the transport layer and
+the handshake's cryptography. Contact establishment, sync and the relay are
+written down and not built, and no layer has a record encoder yet.
 
 | Document | Layer | State |
 |---|---|---|
@@ -42,8 +43,9 @@ the handshake and everything above it are written down and not yet built.
 | `onestein-identity` | identity identifiers | 3 tests |
 | `onestein-sync` | group and message identifiers | 10 tests |
 | `onestein-transport` | the whole transport layer: periods, rotation, tags, headers, frames, reordering windows | 39 tests |
+| `onestein-handshake` | hybrid X25519 and ML-KEM-768 key agreement, key schedule, confirmations | 10 tests |
 
-96 tests, all derived from a written specification, none of them involving a
+106 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 
@@ -67,6 +69,7 @@ cargo clippy --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
 python3 scripts/pruefer-verdrahtet.py
 python3 scripts/pruefe-verweise.py
+python3 scripts/pruefe-notices.py
 ```
 
 ## Licence
