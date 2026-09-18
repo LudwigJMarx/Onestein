@@ -52,21 +52,35 @@ somebody wrote to it and stops existing when it expires.
 Knowing a queue identifier must not be enough to read it, or a relay operator
 who watches a write could read the answer.
 
-- write_key = KDF(root_key, "org.onestein.relay/WRITE", relay_id, int_64(P))
-- read_key = KDF(root_key, "org.onestein.relay/READ", relay_id, int_64(P))
+Each direction gets two signing key pairs, derived from the pairwise root key
+like the queue identifier:
 
-The relay stores, for each queue it holds, the two MAC keys' **verifiers**:
-it is handed `HASH("org.onestein.relay/WRITE_VERIFIER", write_key)` and the
-same for read, on first use, and afterwards it challenges.
+- write_seed = KDF(root_key, "org.onestein.relay/WRITE", relay_id, int_64(P))
+- read_seed = KDF(root_key, "org.onestein.relay/READ", relay_id, int_64(P))
 
-To write or read, the peer is given a random challenge by the relay and
-answers `KDF(write_key, "org.onestein.relay/WRITE_PROOF", challenge)`, which
-the relay checks against the verifier by recomputing from the proof it
-already accepted. A proof is good once; a replayed challenge is refused.
+Each seed is the private key of an Ed25519 pair. On first use the relay is
+handed the two **public** keys along with the queue identifier, and it keeps
+them for as long as it keeps the queue.
 
-The asymmetry matters: the writer cannot read its own queue and the reader
-cannot write to it. A relay that leaks its stored verifiers leaks the ability
-to check proofs, not the ability to make them.
+To write or read, the peer asks the relay, the relay answers with a random
+challenge of at least 16 bytes, and the peer signs
+
+- proof = Ed25519(seed, "org.onestein.relay/WRITE_PROOF" || challenge)
+
+with `READ_PROOF` for reading. The relay verifies against the public key it
+stored. A challenge is good once.
+
+**Signatures rather than shared secrets, and this is the second version of
+this section.** The first had the relay store a hash of a MAC key and verify
+a MAC computed under that key, which it cannot do: a hash of a key does not
+verify anything made with the key. The relay would have had to hold the key
+itself, and then a relay that leaked its storage would leak the ability to
+write into every queue it holds and to drain them. With public keys, a leaked
+store leaks the ability to check proofs and not to make them, which is what
+this section claimed all along and now earns.
+
+The asymmetry between the two pairs is what matters either way: the writer
+cannot read its own queue and the reader cannot write to it.
 
 ## 4 Delivery
 
