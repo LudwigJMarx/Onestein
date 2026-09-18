@@ -42,6 +42,12 @@ jobs:
       - name: Test des Pruefers selbst
         run: python3 scripts/pruefer-verdrahtet.test.py
 
+      - name: Verweise zwischen den Dokumenten
+        run: python3 scripts/pruefe-verweise.py
+
+      - name: Test des Verweispruefers
+        run: python3 scripts/pruefe-verweise.test.py
+
       # ── AB HIER DAS PROJEKT ─────────────────────────────────────────────
       # Jede Pruefung einzeln benannt, nicht in einem Sammelschritt: ein rotes
       # Feld soll sagen, WAS rot ist.

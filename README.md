@@ -63,6 +63,7 @@ cargo test --workspace --locked
 cargo clippy --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
 python3 scripts/pruefer-verdrahtet.py
+python3 scripts/pruefe-verweise.py
 ```
 
 ## Licence
