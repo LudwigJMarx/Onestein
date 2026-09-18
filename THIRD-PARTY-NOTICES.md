@@ -34,6 +34,7 @@ a notice.
 | `fiat-crypto` | 0.3.0 | MIT OR Apache-2.0 OR BSD-1-Clause |
 | `generic-array` | 0.14.7 | MIT |
 | `getrandom` | 0.2.17 | MIT OR Apache-2.0 |
+| `getrandom` | 0.3.4 | MIT OR Apache-2.0 |
 | `getrandom` | 0.4.3 | MIT OR Apache-2.0 |
 | `hybrid-array` | 0.4.15 | MIT OR Apache-2.0 |
 | `inout` | 0.1.4 | MIT OR Apache-2.0 |
@@ -49,6 +50,7 @@ a notice.
 | `poly1305` | 0.8.0 | Apache-2.0 OR MIT |
 | `proc-macro2` | 1.0.107 | MIT OR Apache-2.0 |
 | `quote` | 1.0.47 | MIT OR Apache-2.0 |
+| `r-efi` | 5.3.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later |
 | `r-efi` | 6.0.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later |
 | `rand_core` | 0.6.4 | MIT OR Apache-2.0 |
 | `rand_core` | 0.10.1 | MIT OR Apache-2.0 |
@@ -68,5 +70,7 @@ a notice.
 | `universal-hash` | 0.5.1 | MIT OR Apache-2.0 |
 | `version_check` | 0.9.5 | MIT/Apache-2.0 |
 | `wasi` | 0.11.1+wasi-snapshot-preview1 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT |
+| `wasip2` | 1.0.1+wasi-0.2.4 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT |
+| `wit-bindgen` | 0.46.0 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT |
 | `x25519-dalek` | 3.0.0 | BSD-3-Clause |
 | `zeroize` | 1.9.0 | Apache-2.0 OR MIT |

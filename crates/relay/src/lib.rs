@@ -12,6 +12,15 @@
 
 #![forbid(unsafe_code)]
 
+pub mod api;
+pub mod store;
+
+pub use api::{
+    Challenges, Request, Response, WireError, decode_request, decode_response, encode_request,
+    encode_response, handle,
+};
+pub use store::{RELAY_VERSION, Refusal, Store, blob_id};
+
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 use onestein_crypto::{HASH_LEN, kdf};
 

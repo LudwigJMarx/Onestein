@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/bdf", "crates/contact", "crates/crypto", "crates/handshake", "crates/identity", "crates/record", "crates/relay", "crates/sync", "crates/transport"]
+members = ["crates/bdf", "crates/contact", "crates/crypto", "crates/handshake", "crates/identity", "crates/record", "crates/relay", "crates/relayd", "crates/sync", "crates/transport"]
 resolver = "3"
 
 [workspace.package]

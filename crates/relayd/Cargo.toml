@@ -1,0 +1,18 @@
+[package]
+name = "onestein-relayd"
+version = "0.0.0"
+description = "A relay daemon: store and forward for peers that are never awake together"
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+getrandom = "0.3"
+onestein-relay = { path = "../relay", version = "0.0.0" }
+
+[dev-dependencies]
+onestein-relay = { path = "../relay", version = "0.0.0" }
+
+[lints]
+workspace = true
