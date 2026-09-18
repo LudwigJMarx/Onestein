@@ -48,6 +48,8 @@ written down and not yet built.
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 
+Working rules for anyone touching this: [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## How this is written
 
 **The document comes before the code.** Where an implementation question has
