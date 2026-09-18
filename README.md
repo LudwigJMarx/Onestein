@@ -19,8 +19,9 @@ It does not interoperate with Briar.
 
 ## State
 
-Draft 0. Nothing here has been reviewed by anyone, and no part of the stack
-is finished.
+Draft 0. Every layer has a document and none has been reviewed by anyone. The
+implementation covers the encoding and the identifiers; the cryptographic
+layers are written down and not yet built.
 
 | Document | Layer | State |
 |---|---|---|
@@ -32,7 +33,7 @@ is finished.
 | [spec/35-contact.md](spec/35-contact.md) | how two identities first meet | written |
 | [spec/40-identity.md](spec/40-identity.md) | identity, devices, recovery | written |
 | [spec/50-sync.md](spec/50-sync.md) | message graph, offers, requests, retention | written |
-| `spec/60-relay.md` | optional store-and-forward | pending |
+| [spec/60-relay.md](spec/60-relay.md) | optional store-and-forward | written |
 
 | Crate | Layer | State |
 |---|---|---|

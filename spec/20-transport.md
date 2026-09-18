@@ -70,6 +70,7 @@ incoming keys are enough.
 | Local network | `org.onestein.transport.lan` | 24 h | 1 h | 25 h |
 | Bluetooth | `org.onestein.transport.bluetooth` | 24 h | 1 h | 25 h |
 | Removable media | `org.onestein.transport.media` | 24 h | 30 d | 30 d 24 h |
+| Relay | `org.onestein.transport.relay` | 24 h | 30 d | 30 d 24 h |
 
 **These values are normative and they are the reason this table exists.**
 Bramble leaves the period length to the implementation, which is safe while
