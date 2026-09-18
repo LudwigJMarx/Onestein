@@ -142,3 +142,76 @@ print(rust("B_HEADER_KEY_INITIAL", b_header))
 print(rust("A_TAG_KEY_PERIOD_700", a_tag_700))
 print(rust("A_TAG_KEY_PERIOD_701", a_tag_701))
 print(rust("TAG_PERIOD_700_STREAM_7", tag_700))
+
+
+# --- Handschlag, spec/30-handshake.md ------------------------------------
+
+HANDSHAKE_VERSION = 1
+PRIMITIVES_VERSION = 1
+
+# Die sieben Geheimnisse und die oeffentlichen Werte sind Fuellmuster in der
+# richtigen Laenge. Sie stehen hier fuer das, was X25519 und ML-KEM liefern,
+# damit der Schluesselplan ohne diese Primitiven pruefbar ist.
+def fuell(byte: int, laenge: int) -> bytes:
+    return bytes([byte]) * laenge
+
+
+dh_ephemeral = fuell(0xA0, 32)
+dh_ephemeral_static = fuell(0xA1, 32)
+dh_static_ephemeral = fuell(0xA2, 32)
+kem_ephemeral_a = fuell(0xB0, 32)
+kem_ephemeral_b = fuell(0xB1, 32)
+kem_static_a = fuell(0xB2, 32)
+kem_static_b = fuell(0xB3, 32)
+
+identity_id_a = fuell(0xC0, 32)
+identity_id_b = fuell(0xC1, 32)
+device_signing_a = fuell(0xC2, 32)
+device_signing_b = fuell(0xC3, 32)
+dh_static_pub_a = fuell(0xC4, 32)
+dh_static_pub_b = fuell(0xC5, 32)
+kem_static_pub_a = fuell(0xD0, 1184)
+kem_static_pub_b = fuell(0xD1, 1184)
+dh_ephemeral_pub_a = fuell(0xC6, 32)
+dh_ephemeral_pub_b = fuell(0xC7, 32)
+kem_ephemeral_pub_a = fuell(0xD2, 1184)
+kem_ephemeral_pub_b = fuell(0xD3, 1184)
+ct_ephemeral_a = fuell(0xE0, 1088)
+ct_ephemeral_b = fuell(0xE1, 1088)
+ct_static_a = fuell(0xE2, 1088)
+ct_static_b = fuell(0xE3, 1088)
+
+root_key = bsp_hash(
+    b"org.onestein.handshake/ROOT_KEY",
+    HANDSHAKE_VERSION.to_bytes(1, "big"),
+    IDENTITY_VERSION.to_bytes(1, "big"),
+    PRIMITIVES_VERSION.to_bytes(1, "big"),
+    TRANSPORT_VERSION.to_bytes(1, "big"),
+    dh_ephemeral,
+    dh_ephemeral_static,
+    dh_static_ephemeral,
+    kem_ephemeral_a,
+    kem_ephemeral_b,
+    kem_static_a,
+    kem_static_b,
+    identity_id_a,
+    identity_id_b,
+    device_signing_a,
+    device_signing_b,
+    dh_static_pub_a,
+    dh_static_pub_b,
+    kem_static_pub_a,
+    kem_static_pub_b,
+    dh_ephemeral_pub_a,
+    dh_ephemeral_pub_b,
+    kem_ephemeral_pub_a,
+    kem_ephemeral_pub_b,
+    ct_ephemeral_a,
+    ct_ephemeral_b,
+    ct_static_a,
+    ct_static_b,
+)
+
+print(rust("ROOT_KEY", root_key))
+print(rust("CONFIRMATION_A", kdf(root_key, b"org.onestein.handshake/CONFIRMATION_A")))
+print(rust("CONFIRMATION_B", kdf(root_key, b"org.onestein.handshake/CONFIRMATION_B")))

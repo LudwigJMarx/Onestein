@@ -54,9 +54,25 @@ Four encapsulations in total:
 Both directions of each pair, so that neither the forward secrecy nor the
 authentication rests on one device's random number generator alone.
 
-Alongside, three X25519 agreements as the classical half: ephemeral to
-ephemeral, ephemeral to static, static to ephemeral. Static to static is
-omitted; it adds nothing that the other three do not already give.
+Alongside, three X25519 agreements as the classical half. Each is named for
+whose key is whose, A's first:
+
+- dh_ephemeral = DH(ephemeral_a, ephemeral_b)
+- dh_ephemeral_static = DH(ephemeral_a, static_b)
+- dh_static_ephemeral = DH(static_a, ephemeral_b)
+
+Static to static is omitted; it adds nothing the other three do not already
+give. An X25519 agreement that comes out all zeroes aborts the handshake
+(`05-primitives.md` §5).
+
+The four encapsulated secrets are named the same way, for whoever
+encapsulated: kem_ephemeral_a and kem_static_a are the secrets A created,
+kem_ephemeral_b and kem_static_b the ones B created. Each ciphertext is named
+for its secret.
+
+Both peers therefore compute the same seven values under the same names, one
+side by encapsulating and the other by decapsulating, and the key schedule
+below can list them in one order for both.
 
 Hybrid means both halves are always present. If ML-KEM falls, the handshake
 is as strong as X25519 alone. If X25519 falls, it is as strong as ML-KEM
