@@ -8,7 +8,13 @@ repository.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+ed25519-dalek = "3.0.0"
+ml-dsa = "0.1.1"
+onestein-bdf = { path = "../bdf", version = "0.0.0" }
 onestein-crypto = { path = "../crypto", version = "0.0.0" }
+
+[dev-dependencies]
+onestein-bdf = { path = "../bdf", version = "0.0.0" }
 
 [lints]
 workspace = true

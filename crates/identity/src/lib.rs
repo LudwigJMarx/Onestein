@@ -9,6 +9,13 @@
 
 #![forbid(unsafe_code)]
 
+mod certificate;
+
+pub use certificate::{
+    DeviceCertificate, ED25519_SIGNATURE_LEN, KEM_ENCAPSULATION_KEY_LEN, MLDSA_SIGNATURE_LEN,
+    RootKeys, X25519_LEN, verify_certificate,
+};
+
 use onestein_crypto::{HASH_LEN, hash};
 
 /// Identity format version. Inside the identifier, so an identity of another
@@ -33,6 +40,18 @@ pub enum Error {
         /// Bytes given.
         given: usize,
     },
+    /// A number does not fit the signed integer BDF uses.
+    OutOfRange,
+    /// The container or the certificate is not the structure it should be.
+    Malformed,
+    /// The certificate names an identity other than the one whose root keys
+    /// are verifying it.
+    WrongIdentity,
+    /// One of the two signatures did not verify. Which one is not reported:
+    /// both are required, so one failing is the same answer.
+    BadSignature,
+    /// The signing algorithm refused.
+    Signing,
 }
 
 /// An identity identifier.

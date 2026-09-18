@@ -29,14 +29,18 @@ a notice.
 | `curve25519-dalek-derive` | 0.1.1 | MIT/Apache-2.0 |
 | `der` | 0.8.2 | Apache-2.0 OR MIT |
 | `digest` | 0.11.3 | MIT OR Apache-2.0 |
+| `ed25519` | 3.0.0 | Apache-2.0 OR MIT |
+| `ed25519-dalek` | 3.0.0 | BSD-3-Clause |
 | `fiat-crypto` | 0.3.0 | MIT OR Apache-2.0 OR BSD-1-Clause |
 | `generic-array` | 0.14.7 | MIT |
 | `getrandom` | 0.2.17 | MIT OR Apache-2.0 |
+| `getrandom` | 0.4.3 | MIT OR Apache-2.0 |
 | `hybrid-array` | 0.4.15 | MIT OR Apache-2.0 |
 | `inout` | 0.1.4 | MIT OR Apache-2.0 |
 | `keccak` | 0.2.2 | Apache-2.0 OR MIT |
 | `kem` | 0.3.0 | Apache-2.0 OR MIT |
 | `libc` | 0.2.189 | MIT OR Apache-2.0 |
+| `ml-dsa` | 0.1.1 | Apache-2.0 OR MIT |
 | `ml-kem` | 0.3.2 | Apache-2.0 OR MIT |
 | `module-lattice` | 0.2.3 | Apache-2.0 OR MIT |
 | `num-traits` | 0.2.19 | MIT OR Apache-2.0 |
@@ -45,13 +49,18 @@ a notice.
 | `poly1305` | 0.8.0 | Apache-2.0 OR MIT |
 | `proc-macro2` | 1.0.107 | MIT OR Apache-2.0 |
 | `quote` | 1.0.47 | MIT OR Apache-2.0 |
+| `r-efi` | 6.0.0 | MIT OR Apache-2.0 OR LGPL-2.1-or-later |
 | `rand_core` | 0.6.4 | MIT OR Apache-2.0 |
 | `rand_core` | 0.10.1 | MIT OR Apache-2.0 |
 | `rustc_version` | 0.4.1 | MIT OR Apache-2.0 |
 | `salsa20` | 0.10.2 | MIT OR Apache-2.0 |
 | `semver` | 1.0.28 | MIT OR Apache-2.0 |
+| `sha2` | 0.11.0 | MIT OR Apache-2.0 |
 | `sha3` | 0.11.0 | MIT OR Apache-2.0 |
+| `shake` | 0.1.0 | MIT OR Apache-2.0 |
+| `signature` | 3.0.0 | Apache-2.0 OR MIT |
 | `spki` | 0.8.0 | Apache-2.0 OR MIT |
+| `sponge-cursor` | 0.1.0 | MIT OR Apache-2.0 |
 | `subtle` | 2.6.1 | BSD-3-Clause |
 | `syn` | 2.0.119 | MIT OR Apache-2.0 |
 | `typenum` | 1.20.1 | MIT OR Apache-2.0 |

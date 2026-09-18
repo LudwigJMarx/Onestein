@@ -92,6 +92,13 @@ The certificate is carried as bytes rather than as a nested dictionary
 because what was signed must be what is verified: a verifier that re-encoded
 a parsed structure would be checking a signature over its own encoder.
 
+ML-DSA takes a context string. It is **empty** here, in every signature this
+stack makes. The domain separation lives in `to_sign`, where a label already
+says which structure is being signed, and a second mechanism saying the same
+thing is a second mechanism to get wrong. An implementation that passed the
+label as the context would produce signatures no other implementation
+verifies, and nothing in the bytes would show why.
+
 A verifier MUST check that the `id` field equals the identifier derived from
 the root keys it is verifying against (§3). Without that check, a certificate
 signed by a trusted identity could name a different one, and every contact
