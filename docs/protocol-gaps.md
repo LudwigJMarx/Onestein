@@ -2,9 +2,11 @@
 
 Two lists, kept apart on purpose.
 
-**Silences** are places where the specification does not say, and two
-implementations can therefore disagree without either being wrong. They are
-settled by measurement against the Java implementation, not by argument.
+**Silences** are places where a specification does not say, and two
+implementations can therefore disagree without either being wrong. While this
+project implemented Bramble, they were to be settled by measuring the Java
+implementation. Since 18.09.2026 they are ours to decide, and a decided
+silence moves into a document under `spec/` with its reason.
 
 **Limits** are places where the specification does say, and the answer is
 unsatisfying. No implementation can fix those. They are the only honest input
@@ -17,11 +19,12 @@ of the specification and the evidence.
 
 ## Silences
 
-| Gap | Layer | Our choice | How it gets settled |
-|---|---|---|---|
-| No nesting limit for containers | BDF | `MAX_NESTING = 64`, refused rather than recursed into | Feed the Java reader progressively deeper input and find where it stops |
-| "Lexicographic order" for dictionary keys is not defined | BDF §canonical form | UTF-8 byte order | Java compares UTF-16 code units. Construct two keys that sort differently under the two orders and hash both sides |
-| No record type for "I no longer have that message" | BSP 3.2 | not reached yet | Delete a message on the Java side after an OFFER, then REQUEST it and watch the wire |
+| Gap | Layer | State |
+|---|---|---|
+| No nesting limit for containers | BDF | **Decided**: 64, refused without recursing that far. `spec/10-encoding.md` §2.1 |
+| "Lexicographic order" for dictionary keys is not defined | BDF | **Decided**: UTF-8 byte order. `spec/10-encoding.md` §2.2 |
+| Canonical form is only asked of the writer | BDF | **Decided**: a strict reading mode, required wherever data is hashed. `spec/10-encoding.md` §2.3. This one is not a silence Bramble left, it is a rule we add |
+| No record type for "I no longer have that message" | BSP 3.2 | **Open, and now a requirement**: `spec/50-sync.md` has to answer it. A device that deletes a message can still be asked for it, and the sender waits for an answer the protocol cannot express |
 
 ## Limits
 

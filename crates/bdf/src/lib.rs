@@ -12,6 +12,22 @@
 mod read;
 mod write;
 
+/// The shortest of 1, 2, 4, 8 bytes that holds `number` in two's complement.
+///
+/// The writer uses it to encode, the strict reader uses it to refuse a longer
+/// encoding of the same value.
+pub(crate) fn minimal_int_length(number: i64) -> u8 {
+    if i64::from(i8::MIN) <= number && number <= i64::from(i8::MAX) {
+        1
+    } else if i64::from(i16::MIN) <= number && number <= i64::from(i16::MAX) {
+        2
+    } else if i64::from(i32::MIN) <= number && number <= i64::from(i32::MAX) {
+        4
+    } else {
+        8
+    }
+}
+
 /// How deeply containers may nest before the reader refuses the input.
 ///
 /// The specification does not name a limit. This one is ours, and it is a
@@ -20,7 +36,7 @@ mod write;
 /// first release.
 pub const MAX_NESTING: usize = 64;
 
-pub use read::{Error, from_bytes};
+pub use read::{Error, from_bytes, from_bytes_canonical};
 pub use write::to_bytes;
 
 /// A BDF object.

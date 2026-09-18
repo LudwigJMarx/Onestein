@@ -25,7 +25,7 @@ is finished.
 | Document | Layer | State |
 |---|---|---|
 | [spec/00-overview.md](spec/00-overview.md) | requirements, threat model, layering, decisions | written |
-| `spec/10-encoding.md` | canonical binary encoding | pending. The encoding itself is decided: BDF version 1, unchanged |
+| [spec/10-encoding.md](spec/10-encoding.md) | canonical binary encoding | written. BDF version 1 unchanged, plus three rules BDF leaves open |
 | `spec/20-transport.md` | tags, stream headers, frames, key rotation | pending |
 | [spec/hybrid-handshake.md](spec/hybrid-handshake.md) | hybrid X25519 and ML-KEM key agreement | written as an extension of Briar's handshake, to be rewritten as the native one |
 | `spec/40-identity.md` | identity, devices, recovery | pending |
@@ -34,11 +34,11 @@ is finished.
 
 | Crate | Layer | State |
 |---|---|---|
-| `onestein-bdf` | encoding | reader, writer, canonical form. 28 tests |
+| `onestein-bdf` | encoding | reader, writer, strict mode for anything that gets hashed. 35 tests |
 | `onestein-crypto` | the multi-argument hash over BLAKE2b | 5 tests, checked against CPython's `hashlib` |
 | `onestein-sync` | identifiers | 8 tests. **Still carries Bramble's labels**, which is wrong for this stack and changes when `50-sync.md` is written |
 
-41 tests, all derived from a written specification, none of them involving a
+48 tests, all derived from a written specification, none of them involving a
 second implementation. They show that the code does what the documents say,
 which is not the same as the documents being right.
 

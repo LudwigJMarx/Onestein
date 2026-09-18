@@ -1,6 +1,6 @@
 //! Encoding BDF objects.
 
-use crate::Value;
+use crate::{Value, minimal_int_length};
 
 /// Encodes an object with integers and lengths in the fewest bytes that hold
 /// them, which is what the specification requires of data that is to be
@@ -23,7 +23,7 @@ fn write_into(value: &Value, out: &mut Vec<u8>) {
         Value::Null => out.push(0x00),
         Value::Bool(set) => out.push(0x10 | u8::from(*set)),
         Value::Int(number) => {
-            let length = int_length(*number);
+            let length = minimal_int_length(*number);
             out.push(0x20 | length);
             push_be(*number, length, out);
         }
@@ -58,23 +58,10 @@ fn write_into(value: &Value, out: &mut Vec<u8>) {
 fn write_sized(kind: u8, bytes: &[u8], out: &mut Vec<u8>) {
     // The length is itself a signed integer, so 128 bytes already needs two.
     let length = i64::try_from(bytes.len()).unwrap_or(i64::MAX);
-    let length_of_length = int_length(length);
+    let length_of_length = minimal_int_length(length);
     out.push(kind | length_of_length);
     push_be(length, length_of_length, out);
     out.extend_from_slice(bytes);
-}
-
-/// The shortest of 1, 2, 4, 8 bytes that holds `number` in two's complement.
-fn int_length(number: i64) -> u8 {
-    if i64::from(i8::MIN) <= number && number <= i64::from(i8::MAX) {
-        1
-    } else if i64::from(i16::MIN) <= number && number <= i64::from(i16::MAX) {
-        2
-    } else if i64::from(i32::MIN) <= number && number <= i64::from(i32::MAX) {
-        4
-    } else {
-        8
-    }
 }
 
 fn push_be(number: i64, length: u8, out: &mut Vec<u8>) {

@@ -6,7 +6,7 @@
 //! about the identifiers derived from it, and identifiers are how the rest of
 //! the stack decides what it already has.
 
-use crate::{MAX_NESTING, Value};
+use crate::{MAX_NESTING, Value, minimal_int_length};
 
 /// Why a byte string is not a BDF object.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -44,6 +44,24 @@ pub enum Error {
     TooDeeplyNested,
     /// The first object ended before the input did.
     TrailingBytes(usize),
+    /// Strict mode: an integer was encoded in more bytes than it needs.
+    NonMinimalInteger {
+        /// Bytes the encoding used.
+        used: u8,
+        /// Bytes the value needs.
+        minimal: u8,
+    },
+    /// Strict mode: a length was encoded in more bytes than it needs.
+    NonMinimalLength {
+        /// Bytes the encoding used.
+        used: u8,
+        /// Bytes the length needs.
+        minimal: u8,
+    },
+    /// Strict mode: dictionary keys were not sorted by their UTF-8 bytes.
+    KeysOutOfOrder,
+    /// Strict mode: a dictionary key appeared twice.
+    DuplicateKey,
 }
 
 impl core::fmt::Display for Error {
@@ -65,6 +83,14 @@ impl core::fmt::Display for Error {
             Self::KeyNotAString => write!(f, "dictionary key is not a String"),
             Self::TooDeeplyNested => write!(f, "nested deeper than {MAX_NESTING} containers"),
             Self::TrailingBytes(n) => write!(f, "{n} bytes left after the first object"),
+            Self::NonMinimalInteger { used, minimal } => {
+                write!(f, "integer encoded in {used} bytes, needs {minimal}")
+            }
+            Self::NonMinimalLength { used, minimal } => {
+                write!(f, "length encoded in {used} bytes, needs {minimal}")
+            }
+            Self::KeysOutOfOrder => write!(f, "dictionary keys are not sorted"),
+            Self::DuplicateKey => write!(f, "dictionary key appears twice"),
         }
     }
 }
@@ -73,13 +99,37 @@ impl core::error::Error for Error {}
 
 const END: u8 = 0x80;
 
+/// Decodes one BDF object in strict mode, refusing anything that is not in
+/// canonical form: integers and lengths in the fewest bytes that hold them,
+/// dictionary keys unique and sorted by their UTF-8 bytes.
+///
+/// Encoding, draft 0, section 2.3: any data that is hashed, signed or used to
+/// derive an identifier is parsed this way. A non-minimal length is a second
+/// encoding of the same value, so accepting it means a message can be altered
+/// without changing what it means, while changing its identifier.
+///
+/// # Errors
+///
+/// Everything [`from_bytes`] refuses, plus the canonical-form violations.
+pub fn from_bytes_canonical(input: &[u8]) -> Result<Value, Error> {
+    read_one(input, true)
+}
+
 /// Decodes one BDF object and requires the input to end there.
 ///
 /// # Errors
 ///
 /// Returns [`Error`] for any byte string that is not exactly one object.
 pub fn from_bytes(input: &[u8]) -> Result<Value, Error> {
-    let mut reader = Reader { input, pos: 0 };
+    read_one(input, false)
+}
+
+fn read_one(input: &[u8], strict: bool) -> Result<Value, Error> {
+    let mut reader = Reader {
+        input,
+        pos: 0,
+        strict,
+    };
     let value = reader.value(0)?;
     let left = input.len().saturating_sub(reader.pos);
     if left == 0 {
@@ -92,6 +142,8 @@ pub fn from_bytes(input: &[u8]) -> Result<Value, Error> {
 struct Reader<'a> {
     input: &'a [u8],
     pos: usize,
+    /// Refuse anything that is not in canonical form.
+    strict: bool,
 }
 
 impl Reader<'_> {
@@ -150,6 +202,15 @@ impl Reader<'_> {
             return Err(Error::InvalidLengthOfLength(length_of_length));
         }
         let signed = self.signed(length_of_length)?;
+        if self.strict {
+            let minimal = minimal_int_length(signed);
+            if minimal != length_of_length {
+                return Err(Error::NonMinimalLength {
+                    used: length_of_length,
+                    minimal,
+                });
+            }
+        }
         u64::try_from(signed).map_err(|_| Error::NegativeLength(signed))
     }
 
@@ -160,7 +221,16 @@ impl Reader<'_> {
         match kind {
             0 if low == 0 => Ok(Value::Null),
             1 if low <= 1 => Ok(Value::Bool(low == 1)),
-            2 => Ok(Value::Int(self.signed(low)?)),
+            2 => {
+                let number = self.signed(low)?;
+                if self.strict {
+                    let minimal = minimal_int_length(number);
+                    if minimal != low {
+                        return Err(Error::NonMinimalInteger { used: low, minimal });
+                    }
+                }
+                Ok(Value::Int(number))
+            }
             3 => {
                 if low != 8 {
                     return Err(Error::InvalidFloatLength(low));
@@ -194,11 +264,23 @@ impl Reader<'_> {
             }
             7 if low == 0 => {
                 let depth = self.deeper(depth)?;
-                let mut entries = Vec::new();
+                let mut entries: Vec<(String, Value)> = Vec::new();
                 while self.peek() != Some(END) {
                     let Value::Str(key) = self.value(depth)? else {
                         return Err(Error::KeyNotAString);
                     };
+                    if self.strict {
+                        // Order is over the UTF-8 bytes of the keys, decided
+                        // in Encoding draft 0 section 2.2 because BDF does
+                        // not say which order "lexicographic" means.
+                        if let Some((previous, _)) = entries.last() {
+                            match key.as_bytes().cmp(previous.as_bytes()) {
+                                core::cmp::Ordering::Greater => {}
+                                core::cmp::Ordering::Equal => return Err(Error::DuplicateKey),
+                                core::cmp::Ordering::Less => return Err(Error::KeysOutOfOrder),
+                            }
+                        }
+                    }
                     entries.push((key, self.value(depth)?));
                 }
                 self.pos = self.pos.saturating_add(1);
