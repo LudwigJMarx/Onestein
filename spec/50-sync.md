@@ -171,7 +171,7 @@ For each message it shares with a peer, a device keeps:
 | State | Meaning |
 |---|---|
 | `seen` | the peer is known to hold the message |
-| `acked` | the peer has offered or sent it since we last acknowledged |
+| `ack_pending` | the peer has offered or sent it since we last acknowledged, so an acknowledgement is owed |
 | `requested` | the peer has asked for it since we last offered or sent it |
 | `send_count` | how often it has been offered or sent to this peer |
 | `next_send_time` | the earliest time it may be offered or sent again |
@@ -181,6 +181,12 @@ For each message it shares with a peer, a device keeps:
 which reads like a lifetime and is a retransmission backoff; a reader who
 takes it at face value builds a disappearing-message feature on a field that
 has nothing to do with message lifetime.
+
+The same trap was in this table until 18.09.2026: the ack flag was called
+`acked`, which reads as "we have acknowledged it" and means the opposite, that
+an acknowledgement is owed. It is `ack_pending` now. Criticising a name in
+someone else's protocol and then writing the same kind of name is how a
+document teaches its reader to distrust it.
 
 Retransmission uses exponential backoff: `next_send_time` grows with
 `send_count`. How fast is the implementation's business, that it grows is not.
