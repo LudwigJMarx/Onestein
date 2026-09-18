@@ -39,7 +39,29 @@ function, and from it:
 HASH and KDF use the same framing on purpose. One framing means one thing to
 get right.
 
-## 4 Algorithms
+## 4 Records
+
+Two layers exchange framed messages over a byte stream, the handshake and the
+sync layer, and both use one framing:
+
+- record_header = int_8(layer_version) || int_8(record_type) || int_16(len(payload))
+- record = record_header || payload
+
+The maximum payload is 48 KiB.
+
+A peer refuses a record whose version it does not know, and ignores a record
+whose type it does not know within a version it does. Refusing the unknown
+version is what stops a downgrade; ignoring the unknown type is what lets a
+later minor addition pass through an older peer.
+
+The version byte here is the version of the layer that owns the record, not a
+version of this framing. Every layer binds its own version into its keys, so
+a rewritten version byte breaks the key rather than the parse.
+
+Defined here rather than in either layer, because a wire format used by two
+layers and specified in one of them is a dependency in the wrong direction.
+
+## 5 Algorithms
 
 | Role | Algorithm | Sizes in bytes | Note |
 |---|---|---|---|
@@ -57,7 +79,7 @@ single algorithm is the weak one. ML-KEM-1024 and ML-DSA-87 are drop-in
 replacements if a parameter set is later judged short; both change sizes and
 nothing else, and both mean a new version of the document that uses them.
 
-## 5 No own primitives
+## 6 No own primitives
 
 Nothing in this list is implemented in this project. Not the hash, not the
 curve, not the KEM. A primitive written here would need an audit this project
@@ -67,7 +89,7 @@ right.
 Implementations are taken from reviewed libraries, named in the crate that
 uses them, and pinned in `Cargo.lock`.
 
-## 6 What the library does not do
+## 7 What the library does not do
 
 **It does not gather randomness.** Randomness is passed in. A library that
 reaches for the system generator on its own cannot be tested against known

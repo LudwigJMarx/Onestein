@@ -64,8 +64,8 @@ alone.
 
 ## 3 Records
 
-Record framing is the one from `50-sync.md` §record format, reused:
-`int_8(version) || int_8(type) || int_16(len(payload))`.
+Records are framed as `05-primitives.md` §4 defines, with the handshake
+version in the version byte.
 
 | Type | Name | Payload |
 |---|---|---|
@@ -75,9 +75,6 @@ Record framing is the one from `50-sync.md` §record format, reused:
 | 3 | `CERTIFICATE_REQUEST` | empty. Sent when a `CERTIFICATE_ID` names a certificate the peer does not hold |
 | 4 | `ENCAPSULATIONS` | two ML-KEM ciphertexts (1088 each): to the peer's ephemeral key, then to the peer's static key |
 | 5 | `CONFIRMATION` | MAC over the transcript, proving the sender derived the same root key |
-
-A peer refuses a record with an unknown version and ignores a record with a
-known version and an unknown type.
 
 ## 4 Steps
 
